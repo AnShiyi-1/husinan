@@ -1,0 +1,103 @@
+🎨 情绪画布 - 免费部署完整指南
+
+## 🚀 一键部署（推荐方法）
+
+### 步骤1：一键部署
+1. 双击运行：`免费部署到网上.bat`
+2. 按提示操作即可
+3. 部署完成后会显示你的免费域名
+
+### 步骤2：获取域名
+部署完成后，你会得到一个类似这样的域名：
+`https://emotion-canvas-xyz123.vercel.app`
+
+## 📋 手动部署步骤（备用）
+
+### 1. 准备工作
+- 确保已安装 Node.js（https://nodejs.org）
+- 确保已安装 Git（https://git-scm.com）
+
+### 2. 安装Vercel CLI
+```bash
+npm install -g vercel
+```
+
+### 3. 部署命令
+```bash
+cd "c:\Users\Firday1\Desktop\绘画软件"
+npm install
+npm run build
+vercel --prod
+```
+
+### 4. 配置步骤
+当运行 `vercel --prod` 时：
+- 选择 **GitHub** 登录
+- 选择项目范围：**anshiyi-1's projects**
+- 项目名称：使用默认或自定义
+- 其他设置：保持默认即可
+
+## 🔗 部署后的访问地址
+
+### 前端页面
+- 主页面：`https://你的域名.vercel.app`
+- 登录页：`https://你的域名.vercel.app/login`
+- 注册页：`https://你的域名.vercel.app/register`
+
+### API接口
+- 健康检查：`https://你的域名.vercel.app/api/health`
+- 用户注册：`https://你的域名.vercel.app/api/auth/register`
+- 用户登录：`https://你的域名.vercel.app/api/auth/login`
+
+## 🎯 功能验证
+
+部署成功后，请测试以下功能：
+1. ✅ 访问主页面
+2. ✅ 用户注册功能
+3. ✅ 用户登录功能
+4. ✅ 情绪记录功能
+5. ✅ 画布绘制功能
+
+## 🛠️ 常见问题解决
+
+### 问题1：部署失败
+- 检查网络连接
+- 确保package.json存在
+- 重新运行一键部署脚本
+
+### 问题2：页面空白
+- 检查浏览器控制台
+- 确认所有依赖已正确安装
+- 重新构建项目
+
+### 问题3：API无响应
+- 检查server/index.js是否存在
+- 确认环境变量配置正确
+- 查看Vercel日志
+
+## 📱 分享你的应用
+
+部署成功后，你可以：
+- 将域名分享给朋友
+- 在社交媒体上发布
+- 添加到浏览器书签
+
+## 🔄 更新应用
+
+后续更新代码后：
+1. 重新运行 `免费部署到网上.bat`
+2. 或手动执行：
+   ```bash
+   npm run build
+   vercel --prod
+   ```
+
+## 📞 技术支持
+
+如果遇到问题：
+1. 检查 `故障诊断.bat`
+2. 查看 `deployment.log` 日志文件
+3. 重新运行一键部署脚本
+
+---
+✅ 现在就开始：双击运行 `免费部署到网上.bat`

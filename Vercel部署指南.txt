@@ -1,0 +1,133 @@
+🎨 情绪画布 - Vercel前后端完整部署指南
+
+══════════════════════════════════════
+
+📋 部署前准备
+1. 确保已安装Node.js (推荐18.x版本)
+2. 注册Vercel账号：https://vercel.com
+3. 准备好项目文件
+
+══════════════════════════════════════
+
+🚀 一键部署步骤
+
+第一步：运行一键部署脚本
+- 双击运行：一键部署Vercel前后端.bat
+- 按提示完成：
+  ✓ 安装依赖
+  ✓ 构建项目
+  ✓ 配置Vercel
+  ✓ 部署到Vercel
+
+第二步：获取部署域名
+- 部署完成后会生成类似：https://your-app-name.vercel.app
+- 复制这个域名备用
+
+第三步：更新API配置
+- 双击运行：部署后配置更新.bat
+- 输入你的Vercel域名
+- 脚本会自动更新所有配置
+
+第四步：重新部署
+- 再次运行一键部署脚本
+- 这次部署会包含正确的API配置
+
+══════════════════════════════════════
+
+🔧 手动部署步骤
+
+1. 构建项目
+   ```bash
+   npm install
+   npm run build
+   ```
+
+2. 配置环境变量
+   创建 .env.production 文件：
+   ```
+   NODE_ENV=production
+   VITE_API_BASE_URL=https://your-domain.vercel.app/api
+   JWT_SECRET=your-secret-key
+   SUPABASE_URL=your-supabase-url
+   SUPABASE_ANON_KEY=your-supabase-key
+   ```
+
+3. 部署命令
+   ```bash
+   vercel --prod
+   ```
+
+══════════════════════════════════════
+
+📊 部署验证
+
+部署完成后，访问以下地址测试：
+
+前端测试：
+- https://your-domain.vercel.app
+
+后端API测试：
+- https://your-domain.vercel.app/api/health
+- https://your-domain.vercel.app/api/auth/test
+
+完整功能测试：
+- 用户注册/登录
+- 创建情绪画布
+- 查看画廊
+- 分享功能
+
+══════════════════════════════════════
+
+🛠️ 常见问题解决
+
+1. 部署失败
+   - 检查package.json中的scripts
+   - 确保所有依赖都已安装
+   - 查看Vercel部署日志
+
+2. API调用失败
+   - 确认VITE_API_BASE_URL设置正确
+   - 检查跨域配置
+   - 验证后端路由
+
+3. 静态资源加载失败
+   - 检查vercel.json中的路由配置
+   - 确认dist文件夹存在
+   - 重新构建项目
+
+4. 环境变量问题
+   - 在Vercel控制台设置环境变量
+   - 确保所有必需变量都已配置
+
+══════════════════════════════════════
+
+📁 项目结构说明
+
+├── server/          # 后端API
+├── src/            # 前端源码
+├── dist/           # 构建后的前端文件
+├── vercel.json     # Vercel配置
+├── .env.production # 生产环境变量
+└── package.json    # 项目配置
+
+══════════════════════════════════════
+
+🎯 部署成功标志
+
+✅ 前端：能正常访问主页
+✅ 后端：/api/health 返回正常
+✅ 数据库：用户注册/登录正常
+✅ 功能：创建/查看情绪画布正常
+✅ 分享：分享链接能正常打开
+
+══════════════════════════════════════
+
+📞 技术支持
+
+如果遇到问题：
+1. 运行故障诊断.bat
+2. 查看vercel_deploy_log.txt日志
+3. 检查浏览器开发者工具
+4. 联系技术支持
+
+部署完成后，你的情绪画布将在全球可访问！

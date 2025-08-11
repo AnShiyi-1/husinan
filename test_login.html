@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录功能测试</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div style="padding: 20px;">
+            <h2>登录功能测试</h2>
+            <form @submit.prevent="handleLogin">
+                <div>
+                    <label>用户名:</label>
+                    <input v-model="loginForm.username" type="text" required />
+                </div>
+                <div>
+                    <label>密码:</label>
+                    <input v-model="loginForm.password" type="password" required />
+                </div>
+                <button type="submit">登录</button>
+            </form>
+            <div v-if="loginResult">
+                <h3>登录结果:</h3>
+                <pre>{{ JSON.stringify(loginResult, null, 2) }}</pre>
+            </div>
+            
+            <h2>注册功能测试</h2>
+            <form @submit.prevent="handleRegister">
+                <div>
+                    <label>用户名:</label>
+                    <input v-model="registerForm.username" type="text" required />
+                </div>
+                <div>
+                    <label>密码:</label>
+                    <input v-model="registerForm.password" type="password" required />
+                </div>
+                <button type="submit">注册</button>
+            </form>
+            <div v-if="registerResult">
+                <h3>注册结果:</h3>
+                <pre>{{ JSON.stringify(registerResult, null, 2) }}</pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref } = Vue;
+        
+        // 创建API实例
+        const api = axios.create({
+            baseURL: 'http://localhost:3001/api',
+            timeout: 10000,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        createApp({
+            setup() {
+                const loginForm = ref({
+                    username: '',
+                    password: ''
+                });
+                
+                const registerForm = ref({
+                    username: '',
+                    password: ''
+                });
+                
+                const loginResult = ref(null);
+                const registerResult = ref(null);
+                
+                const handleLogin = async () => {
+                    try {
+                        console.log('发送登录请求:', loginForm.value);
+                        const response = await api.post('/auth/login', loginForm.value);
+                        loginResult.value = response.data;
+                        console.log('登录成功:', response.data);
+                    } catch (error) {
+                        loginResult.value = error.response?.data || { error: error.message };
+                        console.error('登录失败:', error);
+                    }
+                };
+                
+                const handleRegister = async () => {
+                    try {
+                        console.log('发送注册请求:', registerForm.value);
+                        const response = await api.post('/auth/register', registerForm.value);
+                        registerResult.value = response.data;
+                        console.log('注册成功:', response.data);
+                    } catch (error) {
+                        registerResult.value = error.response?.data || { error: error.message };
+                        console.error('注册失败:', error);
+                    }
+                };
+                
+                return {
+                    loginForm,
+                    registerForm,
+                    loginResult,
+                    registerResult,
+                    handleLogin,
+                    handleRegister
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

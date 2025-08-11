@@ -1,0 +1,63 @@
+🎯 Vercel本地开发完整指南
+
+## 📍 两种本地开发方式
+
+### 方式1：Vercel Dev（推荐）
+
+#### 步骤1：初始化项目
+```bash
+# 在项目根目录运行
+vercel
+```
+
+#### 步骤2：按提示配置
+1. **选择项目范围**：选择你的GitHub账号
+2. **项目名称**：按回车使用默认
+3. **开发框架**：选择 "Other"
+4. **输出目录**：输入 `dist`
+5. **构建命令**：输入 `npm run build`
+6. **开发命令**：输入 `npm run dev`
+
+#### 步骤3：启动本地开发
+```bash
+vercel dev
+```
+
+#### 访问地址
+- **前端**：http://localhost:3000
+- **API**：http://localhost:3000/api
+
+### 方式2：传统方式（备用）
+
+#### 启动后端
+```bash
+npm run server
+# 访问：http://localhost:3000
+```
+
+#### 启动前端（新窗口）
+```bash
+npm run dev
+# 访问：http://localhost:5173
+```
+
+## 🚀 一键启动
+
+双击运行：`vercel-dev.bat`
+
+## 📋 常见问题
+
+### 如果vercel dev卡住
+1. 清理配置：`rmdir /s /q .vercel`
+2. 重新初始化：`vercel`
+
+### 端口冲突
+如果3000端口被占用，会自动使用3001、3002等
+
+### 环境变量
+确保.env文件存在于根目录
+
+## 🎯 验证成功
+访问以下地址确认：
+- http://localhost:3000 （前端）
+- http://localhost:3000/api/health （后端API）

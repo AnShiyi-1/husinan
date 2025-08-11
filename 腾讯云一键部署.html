@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>腾讯云CloudBase一键部署</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; }
+        .container { max-width: 600px; margin: 0 auto; text-align: center; }
+        .button { display: inline-block; padding: 15px 30px; margin: 10px; background: white; color: #667eea; text-decoration: none; border-radius: 25px; font-weight: bold; transition: transform 0.2s; }
+        .button:hover { transform: translateY(-2px); }
+        .step { background: rgba(255,255,255,0.1); padding: 20px; margin: 10px 0; border-radius: 10px; }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 腾讯云CloudBase一键部署</h1>
+        <p>解决Netlify白屏问题，使用中国云服务商</p>
+        
+        <div class="step">
+            <h3>步骤1：准备文件</h3>
+            <p>文件已准备就绪： <code>dist.zip</code></p>
+        </div>
+        
+        <div class="step">
+            <h3>步骤2：一键部署</h3>
+            <a href="https://console.cloud.tencent.com/tcb/env/index" class="button" target="_blank">
+                打开腾讯云CloudBase
+            </a>
+            <a href="https://console.cloud.tencent.com/tcb/hosting" class="button" target="_blank">
+                直接打开静态托管
+            </a>
+        </div>
+        
+        <div class="step">
+            <h3>📋 详细操作</h3>
+            <ol style="text-align: left;">
+                <li>登录腾讯云账号（微信扫码即可）</li>
+                <li>点击"新建环境"（免费额度够用）</li>
+                <li>选择"静态网站托管"</li>
+                <li>上传 <strong>dist.zip</strong> 文件</li>
+                <li>点击"部署"，获得中国可访问的网址</li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <h3>🎯 备用方案</h3>
+            <a href="#" class="button" onclick="openLocal()">
+                本地测试版本
+            </a>
+            <a href="#" class="button" onclick="openGitHub()">
+                GitHub Pages部署
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function openLocal() {
+            window.open('local-test.html', '_blank');
+        }
+        
+        function openGitHub() {
+            window.open('https://github.com/new', '_blank');
+        }
+    </script>
+</body>
+</html>

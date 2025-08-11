@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试修复效果</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial; padding: 20px; text-align: center; }
+        .test-btn { background: #00d4aa; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 10px; }
+    </style>
+</head>
+<body>
+    <h1>🛠️ Netlify白屏修复完成</h1>
+    
+    <h2>问题原因：</h2>
+    <p>原配置使用绝对路径"/assets/..."，在Netlify上无法正确加载资源</p>
+    
+    <h2>修复方案：</h2>
+    <p>已在vite.config.js中添加base: './'，使用相对路径"./assets/..."</p>
+    
+    <h2>下一步：</h2>
+    <button class="test-btn" onclick="window.open('https://app.netlify.com/drop')">立即重新部署</button>
+    <button class="test-btn" onclick="window.open('dist')">查看修复后的文件</button>
+    
+    <p>📱 重新部署后，网站将正常工作，不再白屏！</p>
+</body>
+</html>

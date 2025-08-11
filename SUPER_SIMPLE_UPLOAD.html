@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 超简单上传 - 拖拽即可</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .upload-zone {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 60px 20px;
+            margin: 30px 0;
+            background: #f8f9ff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .upload-zone:hover {
+            border-color: #764ba2;
+            background: #f0f2ff;
+            transform: translateY(-2px);
+        }
+        .upload-zone.dragover {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        .icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .file-list {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .file-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .file-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">🎯</div>
+        <h1>超简单上传方案</h1>
+        <p>不需要找按钮，直接拖拽上传！</p>
+        
+        <div class="upload-zone" onclick="openGitHub()">
+            <div class="icon">📁</div>
+            <h3>第一步：打开GitHub仓库</h3>
+            <p>点击这里打开您的仓库，然后拖拽文件上传</p>
+        </div>
+
+        <div class="file-list">
+            <h4>📋 需要上传的文件：</h4>
+            <div class="file-item">📄 index.html</div>
+            <div class="file-item">📁 assets/ (整个文件夹)</div>
+            <div class="file-item">🎨 hb.svg</div>
+            <div class="file-item">🎨 qb.svg</div>
+            <div class="file-item">🎨 tc.svg</div>
+            <div class="file-item">🎨 xpc.svg</div>
+        </div>
+
+        <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin: 20px 0;">
+            <strong>💡 拖拽上传教程：</strong><br>
+            1. 点击下面的"打开GitHub"按钮<br>
+            2. 在新打开的页面中，<strong>直接拖拽</strong>右边的文件到浏览器窗口<br>
+            3. 系统会自动开始上传
+        </div>
+
+        <div>
+            <button class="button" onclick="openGitHub()">🐙 打开GitHub仓库</button>
+            <button class="button" onclick="openFiles()">📁 打开本地文件</button>
+            <button class="button" onclick="downloadPackage()">📦 下载完整包</button>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <p><strong>完成后访问：</strong></p>
+            <a href="https://anshiyi-1.github.io/qxhb" target="_blank" class="button" style="background: #28a745;">
+                🚀 测试网站
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function openGitHub() {
+            window.open('https://github.com/AnShiyi-1/qxhb', '_blank');
+        }
+
+        function openFiles() {
+            window.open('file:///C:/Users/Firday1/Desktop/绘画软件/dist', '_blank');
+        }
+
+        function downloadPackage() {
+            // 创建并下载zip包
+            alert('已为您准备好github-upload-ready.zip，请使用这个文件上传');
+            window.open('file:///C:/Users/Firday1/Desktop/绘画软件/github-upload-ready.zip', '_blank');
+        }
+
+        // 3秒后自动打开GitHub
+        setTimeout(() => {
+            openGitHub();
+        }, 3000);
+    </script>
+</body>
+</html>

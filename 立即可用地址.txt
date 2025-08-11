@@ -1,0 +1,24 @@
+🎯 中国可访问部署方案
+
+❌ 问题：Vercel域名(emotion-canvas-83xobwzyg-anshiyi-1s-projects.vercel.app)在中国大陆被DNS污染
+
+✅ 解决方案：
+
+方案1：Netlify部署（推荐）
+1. 打开：https://app.netlify.com/drop
+2. 将dist文件夹拖拽到页面
+3. 获得地址：https://[随机名称].netlify.app（中国可访问）
+
+方案2：本地使用
+1. 双击：start_production.bat
+2. 浏览器访问：http://localhost:3000
+
+方案3：腾讯云CloudBase
+1. 双击：deploy-cloudbase.bat
+2. 按提示操作
+
+方案4：直接下载使用
+- 文件：dist.zip（已打包完成）
+- 解压后双击index.html即可使用
+
+当前状态：✅ 项目已重新构建完成，dist文件夹已更新

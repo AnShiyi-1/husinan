@@ -1,0 +1,49 @@
+🎯 获取Vercel域名的正确步骤
+
+## 📍 当前状态
+✅ 你已登录Vercel（GitHub账号：2942721961@qq.com）
+✅ Vercel CLI已安装
+
+## 🚀 获取域名步骤
+
+### 方法1：命令行部署
+1. **打开CMD**（管理员权限）
+2. **输入以下命令**：
+   ```bash
+   cd c:\Users\Firday1\Desktop\绘画软件
+   npm install
+   npm run build
+   vercel --prod
+   ```
+
+3. **按提示操作**：
+   - 选择项目范围：选择你的GitHub账号
+   - 项目名称：按回车使用默认
+   - 目录：按回车
+   - 覆盖设置：按回车
+
+4. **等待完成**，你会看到：
+   ```
+   ✅  Production: https://你的域名.vercel.app
+   ```
+
+### 方法2：使用脚本
+双击运行：`快速获取域名.bat`
+
+### 🎯 最终域名格式
+部署成功后，你会获得：
+```
+https://emotion-canvas-随机字符.vercel.app
+```
+
+## 💡 常见问题
+- 如果卡在"选择项目范围"：按回车键
+- 如果提示覆盖：输入 y 确认
+- 部署时间：2-5分钟
+
+## 📋 验证域名
+部署完成后，访问：
+```
+https://你的域名.vercel.app/api/health
+```
+应该返回：{"status":"ok"}

@@ -1,0 +1,30 @@
+🎨 情绪画布 - 立即可用网站地址
+
+✅ 项目已构建完成！dist文件夹已准备就绪
+
+🚀 立即部署（3种免费方案）：
+
+【方案1 - Netlify（最简单）】
+1. 打开：https://app.netlify.com/drop
+2. 拖拽 dist 文件夹到网页
+3. 等待30秒，获得网站地址
+4. 立即可用！
+
+【方案2 - Vercel】
+1. 打开：https://vercel.com/new
+2. 点击"Import from Git"或拖拽上传
+3. 一键部署，获得.vercel.app域名
+
+【方案3 - GitHub Pages】
+1. 打开：https://github.com/new
+2. 创建 emotion-canvas 仓库
+3. 上传 dist 文件夹所有文件
+4. 启用GitHub Pages功能
+
+📁 构建文件位置：
+C:\Users\Firday1\Desktop\绘画软件\dist
+
+📱 手机访问：
+部署完成后，网站地址在手机浏览器同样可用
+
+🎯 推荐：使用Netlify方案，30秒即可获得真实网站地址！

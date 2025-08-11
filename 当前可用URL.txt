@@ -1,0 +1,22 @@
+# 🎯 当前可用的绘画应用URL地址
+
+## ✅ 主要地址（推荐）
+**https://emotion-canvas-gdvsftsbu-anshiyi-1s-projects.vercel.app**
+状态：Ready ✅
+部署时间：29分钟前
+
+## 🔗 备用地址（同样可用）
+1. https://emotion-canvas-bc2xsr5bp-anshiyi-1s-projects.vercel.app ✅
+2. https://emotion-canvas-8y99dyxzz-anshiyi-1s-projects.vercel.app ✅
+3. https://emotion-canvas-c9ek994uf-anshiyi-1s-projects.vercel.app ✅
+4. https://emotion-canvas-49dqw7qmy-anshiyi-1s-projects.vercel.app ✅
+
+## 📱 使用方法
+1. **直接复制**上述任意地址到浏览器
+2. **手机访问**：用手机浏览器打开任意地址
+3. **一键测试**：双击运行"获取URL并测试.bat"
+
+## ⚠️ 注意事项
+- 如果某个地址无法访问，请尝试其他备用地址
+- 建议收藏主要地址以便快速访问
+- 所有地址都已通过Vercel部署验证

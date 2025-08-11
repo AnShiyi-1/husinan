@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国可访问部署方案</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+        .option {
+            background: rgba(255, 255, 255, 0.2);
+            margin: 20px 0;
+            padding: 30px;
+            border-radius: 15px;
+            transition: transform 0.3s;
+        }
+        .option:hover {
+            transform: translateY(-5px);
+        }
+        .btn {
+            background: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateY(-2px);
+        }
+        .status {
+            background: rgba(76, 175, 80, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        .warning {
+            background: rgba(255, 152, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 中国可访问部署方案</h1>
+        
+        <div class="warning">
+            <h3>⚠️ 问题确认</h3>
+            <p>Vercel域名(emotion-canvas-83xobwzyg-anshiyi-1s-projects.vercel.app)在中国大陆被DNS污染，导致无法访问。</p>
+        </div>
+
+        <div class="option">
+            <h2>方案1: 一键Netlify部署 (推荐)</h2>
+            <p>Netlify在中国访问稳定，无需额外配置</p>
+            <button class="btn" onclick="deployToNetlify()">🚀 立即部署到Netlify</button>
+            <div id="netlify-status"></div>
+        </div>
+
+        <div class="option">
+            <h2>方案2: 腾讯云CloudBase部署</h2>
+            <p>使用腾讯云国内节点，访问速度最快</p>
+            <button class="btn" onclick="deployToCloudBase()">☁️ 部署到腾讯云</button>
+            <div id="cloudbase-status"></div>
+        </div>
+
+        <div class="option">
+            <h2>方案3: 本地直接运行</h2>
+            <p>无需部署，本地直接使用</p>
+            <button class="btn" onclick="runLocal()">💻 本地启动</button>
+        </div>
+
+        <div class="option">
+            <h2>方案4: 下载使用</h2>
+            <p>下载完整文件，离线使用</p>
+            <a href="dist.zip" class="btn" download="情绪画布.zip">📥 下载完整文件</a>
+        </div>
+    </div>
+
+    <script>
+        async function deployToNetlify() {
+            const status = document.getElementById('netlify-status');
+            status.innerHTML = '<div class="status">🔄 正在部署到Netlify...</div>';
+            
+            try {
+                const response = await fetch('https://api.netlify.com/api/v1/sites', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/zip',
+                        'Authorization': 'Bearer YOUR_TOKEN'
+                    },
+                    body: await fetch('dist.zip').then(r => r.blob())
+                });
+                
+                const result = await response.json();
+                status.innerHTML = `<div class="status">✅ 部署成功！<br>地址: <a href="${result.url}" target="_blank">${result.url}</a></div>`;
+            } catch (error) {
+                status.innerHTML = '<div class="warning">❌ 自动部署失败，请手动操作</div>';
+                window.open('https://app.netlify.com/drop', '_blank');
+            }
+        }
+
+        function deployToCloudBase() {
+            alert('请使用deploy-cloudbase.bat文件进行腾讯云部署');
+            window.open('deploy-cloudbase.bat', '_self');
+        }
+
+        function runLocal() {
+            window.open('start_production.bat', '_self');
+        }
+
+        // 自动检测当前部署状态
+        window.addEventListener('load', async () => {
+            // 检查是否有可用的中国可访问链接
+            const checkUrl = 'https://emotion-canvas.netlify.app';
+            try {
+                const response = await fetch(checkUrl, {mode: 'no-cors'});
+                // 如果Netlify已部署，显示链接
+            } catch (error) {
+                // 忽略错误，继续检查
+            }
+        });
+    </script>
+</body>
+</html>

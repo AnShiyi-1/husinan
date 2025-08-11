@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一键部署到GitHub Pages</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .step {
+            background: rgba(255, 255, 255, 0.1);
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #4ecdc4;
+            text-align: left;
+        }
+        .step h3 {
+            margin: 0 0 10px 0;
+            color: #4ecdc4;
+        }
+        .step p {
+            margin: 0;
+            opacity: 0.9;
+        }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 50px;
+            margin: 10px;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        .warning {
+            background: rgba(255, 152, 0, 0.2);
+            border-left-color: #ff9800;
+        }
+        .success {
+            background: rgba(76, 175, 80, 0.2);
+            border-left-color: #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 情绪画布部署指南</h1>
+        
+        <div class="step">
+            <h3>📥 第一步：安装Git</h3>
+            <p>访问 <a href="https://git-scm.com/download/win" style="color: #4ecdc4;">Git官网</a> 下载并安装Git</p>
+        </div>
+
+        <div class="step">
+            <h3>🎯 第二步：一键部署</h3>
+            <p>双击运行 <strong>upload-and-deploy.bat</strong> 文件</p>
+            <a href="#" class="btn" onclick="runDeploy()">立即部署</a>
+        </div>
+
+        <div class="step warning">
+            <h3>⚠️ 注意事项</h3>
+            <p>首次运行需要输入GitHub用户名和密码</p>
+        </div>
+
+        <div class="step success">
+            <h3>✅ 完成部署</h3>
+            <p>部署完成后，访问：<br>
+            <strong>https://AnShiyi-1.github.io/qxhb</strong></p>
+            <a href="https://AnShiyi-1.github.io/qxhb" class="btn" target="_blank">访问网站</a>
+        </div>
+
+        <div class="step">
+            <h3>🛠️ 备用方案</h3>
+            <p>如果自动部署失败，请手动执行：</p>
+            <pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 5px; font-size: 12px; overflow-x: auto;">
+npm run build
+git init
+git add dist/ -f
+git commit -m "Deploy"
+git remote add origin https://github.com/AnShiyi-1/qxhb.git
+git push -u origin main --force
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        function runDeploy() {
+            if (confirm('确定要运行部署脚本吗？')) {
+                // 使用ActiveXObject在Windows上运行批处理文件
+                try {
+                    var shell = new ActiveXObject("WScript.Shell");
+                    shell.Run("cmd /c upload-and-deploy.bat", 1, true);
+                } catch (e) {
+                    // 备用方案：直接下载并运行
+                    alert('请手动双击运行 upload-and-deploy.bat 文件');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>认证状态测试</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/pinia@2/dist/pinia.iife.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>认证状态测试</h1>
+        <p>已登录: {{ authStore.isLoggedIn }}</p>
+        <p>用户名: {{ authStore.username }}</p>
+        <p>用户ID: {{ authStore.userId }}</p>
+        <button @click="login">模拟登录</button>
+        <button @click="logout">模拟登出</button>
+    </div>
+
+    <script type="module">
+        import { useAuthStore } from './src/stores/auth.js'
+        
+        const { createApp, ref, computed } = Vue
+        const { createPinia, defineStore } = Pinia
+        
+        // 创建Pinia实例
+        const pinia = createPinia()
+        
+        // 创建Vue应用
+        const app = createApp({
+            setup() {
+                // 初始化认证存储
+                const authStore = useAuthStore(pinia)
+                
+                const login = () => {
+                    // 模拟登录状态更新
+                    authStore.setUser({
+                        id: '1',
+                        username: 'testuser',
+                        avatar: 'https://example.com/avatar.jpg'
+                    }, 'fake-token')
+                    console.log('登录状态已更新')
+                }
+                
+                const logout = () => {
+                    authStore.clearAuth()
+                    console.log('已登出')
+                }
+                
+                return {
+                    authStore,
+                    login,
+                    logout
+                }
+            }
+        })
+        
+        app.use(pinia)
+        app.mount('#app')
+    </script>
+</body>
+</html>

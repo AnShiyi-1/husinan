@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一键GitHub部署</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 50px;
+            margin: 10px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .step {
+            background: rgba(255, 255, 255, 0.1);
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: left;
+        }
+        .step h3 {
+            margin: 0 0 10px 0;
+            color: #4ecdc4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 一键部署到GitHub</h1>
+        
+        <div class="step">
+            <h3>1️⃣ 点击打开GitHub仓库</h3>
+            <a href="https://github.com/AnShiyi-1/qxhb" class="btn" target="_blank">打开GitHub仓库</a>
+        </div>
+
+        <div class="step">
+            <h3>2️⃣ 上传文件</h3>
+            <p>点击仓库页面的 "Upload files" 按钮</p>
+        </div>
+
+        <div class="step">
+            <h3>3️⃣ 拖拽上传</h3>
+            <p>将以下文件拖拽到上传区域：</p>
+            <ul style="text-align: left;">
+                <li>dist/index.html</li>
+                <li>dist/assets/ 文件夹</li>
+                <li>dist/*.svg 图标文件</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3>4️⃣ 启用GitHub Pages</h3>
+            <p>Settings → Pages → Deploy from a branch → main → Save</p>
+        </div>
+
+        <div class="step">
+            <h3>🎉 完成！</h3>
+            <p>访问：https://AnShiyi-1.github.io/qxhb</p>
+        </div>
+
+        <a href="https://github.com/AnShiyi-1/qxhb" class="btn" target="_blank">立即开始部署</a>
+        
+        <p style="margin-top: 30px; opacity: 0.8;">
+            整个过程只需3分钟！<br>
+            所有文件已准备就绪
+        </p>
+    </div>
+
+    <script>
+        // 3秒后自动打开GitHub
+        setTimeout(() => {
+            window.open('https://github.com/AnShiyi-1/qxhb', '_blank');
+        }, 3000);
+    </script>
+</body>
+</html>

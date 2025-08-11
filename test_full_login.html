@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>完整登录测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #5a6fd8;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <h1>完整登录测试</h1>
+    <form id="loginForm">
+        <div class="form-group">
+            <label for="username">用户名:</label>
+            <input type="text" id="username" name="username" value="testuser" required>
+        </div>
+        <div class="form-group">
+            <label for="password">密码:</label>
+            <input type="password" id="password" name="password" value="password123" required>
+        </div>
+        <div class="form-group">
+            <label>
+                <input type="checkbox" id="remember" name="remember"> 记住我
+            </label>
+        </div>
+        <button type="submit">登录</button>
+    </form>
+    <div id="result" class="result" style="display: none;"></div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // 获取表单数据
+            const formData = new FormData(e.target);
+            const loginData = {
+                username: formData.get('username'),
+                password: formData.get('password'),
+                remember: formData.get('remember') === 'on'
+            };
+            
+            console.log('发送登录请求:', loginData);
+            
+            try {
+                const response = await fetch('http://localhost:3001/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(loginData)
+                });
+                
+                const data = await response.json();
+                console.log('登录响应:', data);
+                
+                const resultDiv = document.getElementById('result');
+                resultDiv.style.display = 'block';
+                
+                if (response.ok && data.user && data.token) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `<p>登录成功!</p><p>用户: ${data.user.username}</p><p>Token: ${data.token.substring(0, 20)}...</p>`;
+                    console.log('登录成功!');
+                    // 存储token
+                    localStorage.setItem('token', data.token);
+                    console.log('Token已存储');
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `<p>登录失败: ${data.error || '未知错误'}</p>`;
+                    console.log('登录失败:', data.error || '未知错误');
+                }
+            } catch (error) {
+                console.error('登录请求失败:', error);
+                const resultDiv = document.getElementById('result');
+                resultDiv.style.display = 'block';
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `<p>登录请求失败: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+🎯 初学者专用：Vercel(前端) + Railway(后端) 部署方案
+
+## 🌟 为什么选择这个组合？
+
+### ✅ Vercel (前端)
+- **零配置部署**：直接拖拽即可上线
+- **全球CDN**：自动加速，访问超快
+- **免费域名**：your-app.vercel.app
+- **自动HTTPS**：SSL证书自动生成
+
+### ✅ Railway (后端)
+- **$5免费额度**：足够小型项目使用
+- **一键部署**：从GitHub直接部署
+- **自动重启**：代码更新自动重新部署
+- **数据库支持**：PostgreSQL一键创建
+
+## 📋 部署步骤总览
+
+### 第一步：准备代码 (2分钟)
+1. 确保代码在GitHub上
+2. 创建两个仓库：
+   - `emotion-canvas-frontend` (前端)
+   - `emotion-canvas-backend` (后端)
+
+### 第二步：部署前端到Vercel (3分钟)
+1. 访问 [vercel.com](https://vercel.com)
+2. 点击 "New Project"
+3. 选择前端仓库
+4. 一键部署完成！
+
+### 第三步：部署后端到Railway (5分钟)
+1. 访问 [railway.app](https://railway.app)
+2. 创建新项目
+3. 选择后端仓库
+4. 添加PostgreSQL数据库
+5. 配置环境变量
+6. 一键部署完成！
+
+## 🚀 详细操作指南
+
+### 📦 第一步：分离前后端代码
+
+#### 前端仓库结构：
+```
+emotion-canvas-frontend/
+├── src/
+├── public/
+├── dist/
+├── package.json
+├── vite.config.js
+└── vercel.json
+```
+
+#### 后端仓库结构：
+```
+emotion-canvas-backend/
+├── server/
+│   ├── index.js
+│   ├── routes/
+│   └── config/
+├── package.json
+└── railway.json
+```
+
+### 🔧 第二步：配置前端 (Vercel)
+
+#### 1. 创建 `vercel.json`：
+```json
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/dist/$1"
+    }
+  ]
+}
+```
+
+#### 2. 部署命令：
+```bash
+# 在frontend目录
+npm run build
+vercel --prod
+```
+
+### ⚙️ 第三步：配置后端 (Railway)
+
+#### 1. 创建 `railway.json`：
+```json
+{
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "node server/index.js",
+    "restartPolicyType": "ON_FAILURE"
+  }
+}
+```
+
+#### 2. 环境变量配置：
+在Railway面板中添加：
+```bash
+PORT=3000
+NODE_ENV=production
+SUPABASE_URL=你的Supabase地址
+SUPABASE_KEY=你的Supabase密钥
+JWT_SECRET=你的JWT密钥
+```
+
+### 🔗 第四步：连接前后端
+
+#### 前端API配置：
+修改 `src/services/api.js`：
+```javascript
+// 生产环境使用Railway域名
+const API_BASE_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://你的后端域名.up.railway.app' 
+  : 'http://localhost:3000'
+```
+
+## 🎯 一键部署脚本
+
+我已经为你准备好了所有脚本：
+
+### 1. 运行 `初学者一键部署.bat`
+- 自动分离前后端
+- 自动创建配置文件
+- 自动部署到两个平台
+
+### 2. 获取免费域名：
+- 前端：`https://emotion-canvas-xyz123.vercel.app`
+- 后端：`https://emotion-canvas-backend.up.railway.app`
+
+## 📱 功能验证清单
+
+部署完成后，请测试：
+- [ ] 前端页面正常加载
+- [ ] 后端API健康检查
+- [ ] 用户注册功能
+- [ ] 用户登录功能
+- [ ] 数据库连接
+- [ ] 跨域请求正常
+
+## 🔧 常见问题解决
+
+### Q1: 部署失败怎么办？
+- 检查GitHub仓库是否公开
+- 确认package.json配置正确
+- 查看平台日志
+
+### Q2: 前后端无法通信？
+- 检查CORS配置
+- 确认API地址正确
+- 检查环境变量
+
+### Q3: 数据库连接失败？
+- 确认PostgreSQL已创建
+- 检查连接字符串
+- 确认网络权限
+
+## 🎉 成功标准
+
+当看到以下页面时，说明部署成功：
+- 前端：`https://xxx.vercel.app` 正常显示
+- 后端：`https://xxx.up.railway.app/api/health` 返回OK
+- 数据库：用户注册/登录正常
+
+---
+
+**现在就开始：运行 `初学者一键部署.bat` 开始部署！**

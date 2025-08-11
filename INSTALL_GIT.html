@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git安装指南 - 一键解决</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+        .step {
+            background: #f8f9fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: left;
+        }
+        .download-btn {
+            background: #28a745;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+            transition: transform 0.3s;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+        }
+        .check-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .code {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 10px 0;
+            text-align: left;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛠️ Git安装指南</h1>
+        
+        <div class="warning">
+            <strong>⚠️ 检测到问题：</strong> 系统未找到Git命令
+        </div>
+
+        <div class="step">
+            <h3>📥 步骤1：下载Git</h3>
+            <p>Git for Windows官方下载：</p>
+            <a href="https://git-scm.com/download/win" class="download-btn" target="_blank">
+                下载Git for Windows
+            </a>
+            <a href="https://github.com/git-for-windows/git/releases/download/v2.42.0.windows.2/Git-2.42.0.2-64-bit.exe" class="download-btn" target="_blank">
+                直接下载64位版本
+            </a>
+        </div>
+
+        <div class="step">
+            <h3>⚙️ 步骤2：安装配置</h3>
+            <p>安装时保持默认设置即可，确保勾选：</p>
+            <ul>
+                <li>✅ Git Bash</li>
+                <li>✅ Git GUI</li>
+                <li>✅ 添加到PATH环境变量</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3>🔍 步骤3：验证安装</h3>
+            <p>安装完成后，重新打开终端，运行：</p>
+            <div class="code">
+                git --version
+            </div>
+            <button class="check-btn" onclick="testGit()">测试Git安装</button>
+            <button class="check-btn" onclick="openTerminal()">打开新终端</button>
+        </div>
+
+        <div class="step">
+            <h3>🚀 步骤4：配置Git</h3>
+            <p>设置用户名和邮箱：</p>
+            <div class="code">
+                git config --global user.name "你的名字"<br>
+                git config --global user.email "你的邮箱@example.com"
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>💡 无需Git的替代方案</h3>
+            <p>如果你不想安装Git，可以使用：</p>
+            <ul>
+                <li>🌐 GitHub网页界面上传文件</li>
+                <li>📁 使用GitHub Desktop</li>
+                <li>💻 使用VS Code内置Git</li>
+            </ul>
+        </div>
+
+        <div id="result"></div>
+
+        <script>
+            function testGit() {
+                fetch('http://localhost:3000/test-git')
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('result').innerHTML = 
+                            '<div class="success">✅ Git已正确安装！</div>';
+                    })
+                    .catch(() => {
+                        document.getElementById('result').innerHTML = 
+                            '<div class="warning">⚠️ 请重新打开终端再试</div>';
+                    });
+            }
+
+            function openTerminal() {
+                // 打开新的命令提示符
+                window.open('cmd://', '_blank');
+            }
+
+            // 检查当前系统
+            function detectSystem() {
+                const platform = navigator.platform;
+                document.getElementById('result').innerHTML = 
+                    `<div class="code">当前系统: ${platform}</div>`;
+            }
+
+            detectSystem();
+        </script>
+    </div>
+</body>
+</html>

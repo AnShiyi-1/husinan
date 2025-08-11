@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>存在感社区 | 分享生活瞬间</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.10/dayjs.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+    
+    :root {
+      --primary-purple: #8E44AD;
+      --secondary-purple: #9B59B6;
+      --light-purple: #D6B3EB;
+      --lighter-purple: #F3E8FC;
+      --text-dark: #2C3E50;
+      --text-medium: #59657C;
+      --text-light: #95A5A6;
+      --bg-main: #f8f6fb;
+      --white: #FFFFFF;
+      --shadow-sm: 0 4px 20px rgba(142, 68, 173, 0.08);
+      --shadow-md: 0 8px 30px rgba(142, 68, 173, 0.12);
+      --shadow-lg: 0 12px 40px rgba(142, 68, 173, 0.15);
+      --border-radius: 18px;
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+    }
+    
+    body {
+      background: var(--bg-main);
+      color: var(--text-dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+      background-image: radial-gradient(circle at top right, #f5f0ff 0%, #f8f6fb 80%);
+    }
+    
+    #app {
+      max-width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+    
+    /* Header Styles */
+    .header {
+      background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
+      color: var(--white);
+      padding: 1rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background-color: rgba(142, 68, 173, 0.95);
+    }
+    
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      letter-spacing: -0.5px;
+    }
+    
+    .logo i {
+      margin-right: 12px;
+      font-size: 1.6rem;
+      color: #ffd04e;
+    }
+    
+    .search-bar {
+      flex-grow: 1;
+      max-width: 500px;
+      margin: 0 2.5rem;
+      position: relative;
+    }
+    
+    .search-bar input {
+      width: 100%;
+      padding: 12px 20px 12px 48px;
+      border-radius: 50px;
+      border: none;
+      background: rgba(255, 255, 255, 0.2);
+      color: var(--white);
+      font-size: 1rem;
+      outline: none;
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+    }
+    
+    .search-bar input::placeholder {
+      color: rgba(255, 255, 255, 0.75);
+    }
+    
+    .search-bar input:focus {
+      background: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+    }
+    
+    .search-bar i {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.8rem;
+    }
+    
+    .nav-icon {
+      font-size: 1.35rem;
+      color: rgba(255, 255, 255, 0.8);
+      transition: var(--transition);
+      cursor: pointer;
+      position: relative;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .nav-icon:hover {
+      color: var(--white);
+      transform: translateY(-3px);
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .nav-icon .badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #ff6b6b;
+      color: var(--white);
+      font-size: 0.75rem;
+      min-width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    
+    .user-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--white);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    
+    .user-avatar:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    }
+    
+    .main-content {
+      display: flex;
+      max-width: 1400px;
+      margin: 2.5rem auto;
+      width: 100%;
+      padding: 0 1.8rem;
+      gap: 2.2rem;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .sidebar {
+      width: 300px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 5.5rem;
+      align-self: flex-start;
+    }
+    
+    .card {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-sm);
+      padding: 1.8rem;
+      margin-bottom: 2rem;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(215, 179, 235, 0.15);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.95);
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--primary-purple), var(--light-purple));
+    }
+    
+    .profile-card {
+      text-align: center;
+      padding: 2rem 1.8rem 1.8rem;
+    }
+    
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 1.5rem;
+      background: linear-gradient(45deg, var(--primary-purple), var(--secondary-purple));
+      border: 3px solid var(--white);
+      box-shadow: 0 8px 20px rgba(142, 68, 173, 0.3);
+      position: relative;
+      transition: var(--transition);
+      overflow: hidden;
+    }
+    
+    .profile-avatar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom right, transparent, rgba(255, 255, 255, 0.4));
+      border-radius: 50%;
+    }
+    
+    .profile-name {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      font-size: 1.4rem;
+      color: var(--text-dark);
+      letter-spacing: -0.3px;
+    }
+    
+    .profile-bio {
+      color: var(--text-medium);
+      font-size: 0.98rem;
+      margin-bottom: 1.8rem;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
+      color: var(--white);
+      border: none;
+      padding: 13px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: block;
+      width: 100%;
+      font-size: 1.05rem;
+      letter-spacing: 0.3px;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      box-shadow: 0 5px 15px rgba(142, 68, 173, 0.3);
+    }
+    
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--secondary-purple), var(--primary-purple));
+      opacity: 0;
+      transition: var(--transition);
+      z-index: -1;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(142, 68, 173, 0.4);
+    }
+    
+    .btn-primary:hover::before {
+      opacity: 1;
+    }
+    
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 1.2rem;
+      margin-top: 1.5rem;
+      border-top: 1px solid rgba(210, 194, 225, 0.3);
+    }
+    
+    .stat-item {
+      text-align: center;
+      flex: 1;
+      position: relative;
+    }
+    
+    .stat-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 5px;
+      right: 0;
+      height: 40px;
+      width: 1px;
+      background: rgba(210, 194, 225, 0.3);
+    }
+    
+    .stat-value {
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: var(--primary-purple);
+      margin-bottom: 2px;
+    }
+    
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+    
+    .trending-topics h3 {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    
+    .topic-item {
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(210, 194, 225, 0.2);
+      display: flex;
+      align-items: center;
+      color: var(--text-medium);
+      transition: var(--transition);
+      font-size: 1.02rem;
+      cursor: pointer;
+    }
+    
+    .topic-item:last-child {
+      border-bottom: none;
+    }
+    
+    .topic-item:hover {
+      color: var(--primary-purple);
+      padding-left: 5px;
+    }
+    
+    .topic-item i {
+      margin-right: 14px;
+      color: var(--secondary-purple);
+      font-size: 1.1rem;
+      background: var(--lighter-purple);
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      transition: var(--transition);
+    }
+    
+    .topic-item:hover i {
+      background: rgba(142, 68, 173, 0.1);
+      transform: scale(1.08);
+    }
+    
+    .feed {
+      flex: 1;
+    }
+    
+    .post-form {
+      border-radius: var(--border-radius);
+      background: var(--white);
+      box-shadow: var(--shadow-sm);
+      padding: 1.8rem;
+      margin-bottom: 2rem;
+      transition: var(--transition);
+      position: relative;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(215, 179, 235, 0.15);
+      transform: translateY(0);
+    }
+    
+    .post-form:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .post-form .post-header {
+      display: flex;
+      align-items: flex-start;
+    }
+    
+    .post-form .post-avatar {
+      width: 55px;
+      height: 55px;
+      margin-right: 15px;
+      flex-shrink: 0;
+    }
+    
+    .post-input {
+      width: 100%;
+      min-height: 100px;
+      border: none;
+      resize: none;
+      font-size: 1.08rem;
+      outline: none;
+      line-height: 1.6;
+      padding: 15px;
+      border-radius: 16px;
+      background: var(--lighter-purple);
+      margin-bottom: 1rem;
+      transition: var(--transition);
+    }
+    
+    .post-input:focus {
+      background: var(--white);
+      box-shadow: 0 0 0 2px var(--light-purple);
+    }
+    
+    .post-input::placeholder {
+      color: rgba(142, 68, 173, 0.5);
+      font-weight: 500;
+    }
+    
+    .post-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .action-icons {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .action-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-medium);
+      transition: var(--transition);
+      font-size: 1.3rem;
+      background: var(--lighter-purple);
+    }
+    
+    .action-icon:hover {
+      background: rgba(142, 68, 173, 0.15);
+      color: var(--primary-purple);
+      transform: translateY(-3px);
+    }
+    
+    .preview-image {
+      width: 100%;
+      border-radius: 16px;
+      margin-top: 1rem;
+      max-height: 300px;
+      object-fit: cover;
+      display: none;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .preview-image.active {
+      display: block;
+      animation: fadeScale 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+    }
+    
+    .post-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2.2rem;
+    }
+    
+    .post {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      border: 1px solid rgba(215, 179, 235, 0.15);
+      transform: translateY(0);
+    }
+    
+    .post:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .post-header {
+      display: flex;
+      align-items: center;
+      padding: 1.8rem 1.8rem 1.2rem;
+    }
+    
+    .post-avatar {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 15px;
+      background: linear-gradient(45deg, var(--primary-purple), var(--secondary-purple));
+      border: 2px solid var(--white);
+      box-shadow: 0 5px 15px rgba(142, 68, 173, 0.2);
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    
+    .post-avatar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom right, transparent, rgba(255, 255, 255, 0.4));
+      border-radius: 50%;
+    }
+    
+    .post-user-info {
+      flex: 1;
+    }
+    
+    .post-username {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+    
+    .post-time {
+      color: var(--text-light);
+      font-size: 0.92rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .post-time i {
+      color: var(--light-purple);
+    }
+    
+    .post-content {
+      padding: 0 1.8rem 1.8rem;
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: var(--text-dark);
+      font-weight: 400;
+    }
+    
+    .post-image {
+      width: 100%;
+      max-height: 500px;
+      object-fit: cover;
+      border-radius: 0;
+      cursor: pointer;
+      display: block;
+      margin-bottom: 1.8rem;
+    }
+    
+    .post-footer {
+      padding: 0.8rem 1.8rem 1.8rem;
+    }
+    
+    .engagement {
+      display: flex;
+      justify-content: space-around;
+      padding: 0.8rem 0;
+      border-top: 1px solid rgba(210, 194, 225, 0.25);
+      border-bottom: 1px solid rgba(210, 194, 225, 0.25);
+    }
+    
+    .engagement-btn {
+      display: flex;
+      align-items: center;
+      color: var(--text-light);
+      font-size: 1.05rem;
+      gap: 8px;
+      cursor: pointer;
+      padding: 9px 24px;
+      border-radius: 50px;
+      transition: var(--transition);
+      position: relative;
+      font-weight: 500;
+    }
+    
+    .engagement-btn:hover {
+      background: rgba(142, 68, 173, 0.05);
+      color: var(--primary-purple);
+    }
+    
+    .engagement-btn i {
+      font-size: 1.3rem;
+    }
+    
+    .liked {
+      color: #ff6b6b;
+    }
+    
+    .like-count, .comment-count, .share-count {
+      font-weight: 600;
+      min-width: 24px;
+      text-align: center;
+    }
+    
+    .comments-section {
+      margin-top: 1.5rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      opacity: 0;
+    }
+    
+    .comments-section.expanded {
+      max-height: 1200px;
+      opacity: 1;
+    }
+    
+    .comment-input {
+      display: flex;
+      align-items: center;
+      margin-top: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .comment-input img {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      margin-right: 12px;
+      background: linear-gradient(45deg, var(--primary-purple), var(--secondary-purple));
+      border: 2px solid var(--white);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      flex-shrink: 0;
+    }
+    
+    .comment-input-field {
+      flex: 1;
+      padding: 14px 20px;
+      border: 1px solid rgba(210, 194, 225, 0.5);
+      border-radius: 50px;
+      font-size: 1rem;
+      outline: none;
+      transition: var(--transition);
+      background: rgba(255, 255, 255, 0.8);
+    }
+    
+    .comment-input-field:focus {
+      border-color: var(--light-purple);
+      box-shadow: 0 0 0 3px rgba(155, 89, 182, 0.15);
+    }
+    
+    .comment-list {
+      margin-top: 1.5rem;
+      padding-right: 10px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .comment-item {
+      display: flex;
+      padding: 1.2rem 0;
+      animation: fadeIn 0.4s ease-out;
+    }
+    
+    .comment-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 12px;
+      background: linear-gradient(45deg, var(--primary-purple), var(--secondary-purple));
+      border: 2px solid var(--white);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      flex-shrink: 0;
+    }
+    
+    .comment-content {
+      flex: 1;
+      background: rgba(243, 232, 252, 0.4);
+      padding: 16px;
+      border-radius: 18px;
+      border-top-left-radius: 5px;
+    }
+    
+    .comment-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .comment-username {
+      font-weight: 700;
+      font-size: 0.98rem;
+      margin-right: 12px;
+      color: var(--text-dark);
+    }
+    
+    .comment-time {
+      color: var(--text-light);
+      font-size: 0.82rem;
+    }
+    
+    .comment-text {
+      font-size: 1rem;
+      line-height: 1.5;
+      color: var(--text-dark);
+    }
+    
+    .like-animation {
+      animation: like 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    @keyframes like {
+      0% { transform: scale(1); }
+      25% { transform: scale(1.3); }
+      50% { transform: scale(0.9); }
+      75% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    
+    @keyframes fadeScale {
+      0% { opacity: 0; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .view-all-comments {
+      margin-top: 15px;
+      color: var(--secondary-purple);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+    }
+    
+    .view-all-comments:hover {
+      color: var(--primary-purple);
+    }
+    
+    .view-all-comments i {
+      font-size: 0.85rem;
+      transition: transform 0.3s ease;
+    }
+    
+    .view-all-comments.expanded i {
+      transform: rotate(180deg);
+    }
+    
+    /* Background decoration */
+    .bg-deco {
+      position: absolute;
+      z-index: 1;
+    }
+    
+    .bg-deco-1 {
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: linear-gradient(to bottom right, rgba(142, 68, 173, 0.08), rgba(106, 27, 154, 0.05));
+      top: -100px;
+      right: -100px;
+    }
+    
+    .bg-deco-2 {
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: linear-gradient(to bottom right, rgba(214, 179, 235, 0.1), rgba(142, 68, 173, 0.06));
+      bottom: 100px;
+      left: -150px;
+    }
+    
+    /* Footer */
+    .footer {
+      background: rgba(243, 232, 252, 0.5);
+      color: var(--text-medium);
+      padding: 3rem 0 2rem;
+      margin-top: 3.5rem;
+      text-align: center;
+      position: relative;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(215, 179, 235, 0.3);
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      margin-bottom: 1.8rem;
+    }
+    
+    .footer-link {
+      color: var(--text-medium);
+      text-decoration: none;
+      transition: var(--transition);
+      font-weight: 500;
+      position: relative;
+      padding-bottom: 2px;
+    }
+    
+    .footer-link:hover {
+      color: var(--primary-purple);
+    }
+    
+    .footer-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary-purple);
+      transition: var(--transition);
+    }
+    
+    .footer-link:hover::after {
+      width: 100%;
+    }
+    
+    .copyright {
+      font-size: 0.92rem;
+      color: var(--text-light);
+    }
+    
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .right-sidebar {
+        display: none;
+      }
+      
+      .main-content {
+        max-width: 1000px;
+      }
+    }
+    
+    @media (max-width: 900px) {
+      .sidebar {
+        display: none;
+      }
+      
+      .search-bar {
+        display: none;
+      }
+      
+      .main-content {
+        padding: 0 1.2rem;
+      }
+      
+      .header {
+        padding: 1rem;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .post-form {
+        padding: 1.5rem;
+      }
+      
+      .post-header {
+        padding: 1.5rem 1.5rem 1rem;
+      }
+      
+      .post-content {
+        padding: 0 1.5rem 1.5rem;
+      }
+      
+      .post-footer {
+        padding: 0.8rem 1.5rem 1.5rem;
+      }
+      
+      .engagement-btn {
+        padding: 8px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-deco bg-deco-1"></div>
+  <div class="bg-deco bg-deco-2"></div>
+  
+  <div id="app">
+    <header class="header">
+      <div class="logo">
+        <i class="fas fa-sparkles"></i>
+        <span>存在感</span>
+      </div>
+      
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="搜索动态、话题、用户...">
+      </div>
+      
+      <div class="nav-links">
+        <div class="nav-icon">
+          <i class="fas fa-home"></i>
+        </div>
+        <div class="nav-icon">
+          <i class="fas fa-heart"></i>
+          <span class="badge">8</span>
+        </div>
+        <div class="nav-icon">
+          <i class="fas fa-bell"></i>
+          <span class="badge">3</span>
+        </div>
+        <img class="user-avatar" src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='46' height='46' viewBox='0 0 46 46'%3E%3Ccircle cx='23' cy='23' r='23' fill='%239B59B6'/%3E%3Ccircle cx='23' cy='17' r='5' fill='%23ffffff'/%3E%3Cpath d='M33,40 C33,40 28,35 23,35 C18,35 13,40 13,40 L13,34 C13,32.8954305 13.8954305,32 15,32 L31,32 C32.1045695,32 33,32.8954305 33,34 L33,40 Z' fill='%23ffffff'/%3E%3C/svg%3E" alt="Avatar">
+      </div>
+    </header>
+
+    <div class="main-content">
+      <!-- 左侧边栏 -->
+      <aside class="sidebar">
+        <div class="card profile-card">
+          <div class="profile-avatar"></div>
+          <h3 class="profile-name">紫罗兰的梦</h3>
+          <p class="profile-bio">记录生活之美，分享心灵感动</p>
+          <button class="btn-primary">
+            <i class="fas fa-pen-nib"></i> 创作动态
+          </button>
+          <div class="stats">
+            <div class="stat-item">
+              <div class="stat-value">186</div>
+              <div class="stat-label">动态</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">1.4k</div>
+              <div class="stat-label">关注者</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">398</div>
+              <div class="stat-label">关注中</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card trending-topics">
+          <h3><i class="fas fa-hashtag"></i> 热门话题</h3>
+          <div class="topic-item">
+            <i class="fas fa-umbrella-beach"></i> <span>夏日旅行</span>
+          </div>
+          <div class="topic-item">
+            <i class="fas fa-utensils"></i> <span>美食日记</span>
+          </div>
+          <div class="topic-item">
+            <i class="fas fa-camera"></i> <span>摄影作品</span>
+          </div>
+          <div class="topic-item">
+            <i class="fas fa-book-open"></i> <span>读书分享</span>
+          </div>
+          <div class="topic-item">
+            <i class="fas fa-running"></i> <span>运动健身</span>
+          </div>
+        </div>
+      </aside>
+      
+      <!-- 主内容区域 -->
+      <main class="feed">
+        <div class="post-form card">
+          <div class="post-header">
+            <div class="post-avatar"></div>
+            <textarea v-model="newPost.content" class="post-input" placeholder="分享你的灵感瞬间..."></textarea>
+          </div>
+          <img :src="newPost.image" class="preview-image" :class="{active: newPost.image}">
+          <div class="post-actions">
+            <div class="action-icons">
+              <div class="action-icon" @click="triggerImageUpload">
+                <i class="far fa-image"></i>
+              </div>
+              <div class="action-icon" @click="addEmoji">
+                <i class="far fa-smile"></i>
+              </div>
+              <div class="action-icon">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+            </div>
+            <button class="btn-primary" @click="addPost" :disabled="!newPost.content" :class="{disabled: !newPost.content}" style="width: auto; padding: 14px 30px; font-size: 1.05rem;">
+              发布
+            </button>
+          </div>
+        </div>
+        
+        <div class="post-list">
+          <div class="post" v-for="(post, index) in posts" :key="post.id">
+            <div class="post-header">
+              <div class="post-avatar" :style="{'background': post.avatarGradient}"></div>
+              <div class="post-user-info">
+                <div class="post-username">{{ post.username }}</div>
+                <div class="post-time">{{ post.time }} <i :class="post.icon"></i></div>
+              </div>
+            </div>
+            <div class="post-content">
+              {{ post.content }}
+            </div>
+            <img v-if="post.image" class="post-image" :src="post.image" :alt="post.content.substring(0,20) + '...'">
+            <div class="post-footer">
+              <div class="engagement">
+                <div class="engagement-btn" @click="toggleLike(post.id)">
+                  <i :class="['far', 'fa-heart', {liked: post.liked, 'like-animation': post.likeAnimate}]"></i>
+                  <div class="like-count">{{ post.likes }}</div>
+                </div>
+                <div class="engagement-btn" @click="toggleComments(post.id)">
+                  <i class="far fa-comment"></i>
+                  <div class="comment-count">{{ post.comments.length }}</div>
+                </div>
+                <div class="engagement-btn" @click="sharePost(post.id)">
+                  <i class="far fa-share-square"></i>
+                  <div class="share-count">{{ post.shares }}</div>
+                </div>
+              </div>
+              
+              <div class="comments-section" :class="{expanded: post.showComments}">
+                <div class="comment-list" v-if="post.showComments">
+                  <div class="comment-item" v-for="(comment, commentIndex) in post.comments" :key="commentIndex" :style="{'animation-delay': commentIndex*0.1+'s'}">
+                    <img class="comment-avatar" :src="comment.avatar" alt="Avatar">
+                    <div class="comment-content">
+                      <div class="comment-header">
+                        <div class="comment-username">{{ comment.username }}</div>
+                        <div class="comment-time">{{ comment.time }}</div>
+                      </div>
+                      <div class="comment-text">{{ comment.text }}</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="comment-input">
+                  <img class="comment-avatar" src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='42' viewBox='0 0 42 42'%3E%3Ccircle cx='21' cy='21' r='21' fill='%239B59B6'/%3E%3Ccircle cx='21' cy='15' r='4' fill='%23ffffff'/%3E%3Cpath d='M32,37 C32,37 27,32 21,32 C15,32 10,37 10,37 L10,33 C10,31.3431458 11.3431458,30 13,30 L29,30 C30.6568542,30 32,31.3431458 32,33 L32,37 Z' fill='%23ffffff'/%3E%3C/svg%3E" alt="Avatar">
+                  <input type="text" v-model="post.newComment" class="comment-input-field" placeholder="分享你的观点..." @keyup.enter="addComment(post.id)">
+                  <button class="btn-primary" @click="addComment(post.id)" :disabled="!post.newComment" style="width: auto; padding: 12px 25px; font-size: 0.95rem;">
+                    发送
+                  </button>
+                </div>
+              </div>
+              
+              <div v-if="post.comments.length > 2 && !post.showComments" class="view-all-comments" :class="{expanded: post.showComments}" @click="toggleComments(post.id)">
+                查看全部 {{ post.comments.length }} 条评论 <i class="fas fa-chevron-down"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    
+    <footer class="footer">
+      <div class="footer-links">
+        <a href="#" class="footer-link">关于我们</a>
+        <a href="#" class="footer-link">隐私政策</a>
+        <a href="#" class="footer-link">使用条款</a>
+        <a href="#" class="footer-link">帮助中心</a>
+        <a href="#" class="footer-link">联系我们</a>
+      </div>
+      <div class="copyright">
+        © 2023 存在感社区 · 分享生活的每一个精彩瞬间
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const { createApp, ref, reactive } = Vue
+    
+    createApp({
+      setup() {
+        // 新发布的动态内容
+        const newPost = reactive({
+          content: '',
+          image: ''
+        })
+        
+        // 动态数据
+        const posts = ref([
+          {
+            id: 1,
+            username: '紫霞仙子',
+            time: '2小时前',
+            icon: 'fas fa-mountain',
+            content: '在阿尔卑斯山的晨光中醒来，万物静籁，远处雪峰泛着金色光辉。城市快节奏的生活已是遥远回忆，此刻心灵与自然融为一体...',
+            image: 'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22 viewBox=%220 0 400 300%22%3E%3Crect width=%22400%22 height=%22300%22 fill=%22%2372C1D9%22/%3E%3Ccircle cx=%2280%22 cy=%2280%22 r=%2250%22 fill=%22%23FFD700%22/%3E%3Crect x=%220%22 y=%22200%22 width=%22400%22 height=%22100%22 fill=%22%23328c3d%22/%3E%3Cpolygon points=%22200,60 230,120 170,120%22 fill=%22%233e7a3e%22/%3E%3C/svg%3E',
+            avatarGradient: 'linear-gradient(45deg, #BA68C8, #AB47BC)',
+            liked: false,
+            likes: 124,
+            shares: 16,
+            showComments: false,
+            likeAnimate: false,
+            comments: [
+              {
+                username: '旅者明',
+                time: '1小时前',
+                text: '这意境太美了，能分享一下具体位置吗？',
+                avatar: 'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2242%22 height=%2242%22 viewBox=%220 0 42 42%22%3E%3Ccircle cx=%2221%22 cy=%2221%22 r=%2221%22 fill=%22%232ecc71%22/%3E%3Ccircle cx=%2221%22 cy=%2215%22 r=%224%22 fill=%22%23ffffff%22/%3E%3Cpath d=%22M32,37 C32,37 27,32 21,32 C15,32 10,37 10,37 L10,33 C10,31.3431458 11.3431458,30 13,30 L29,30 C30.6568542,30 32,31.3431458 32,33 L32,37 Z%22 fill=%22%23ffffff%22/%3E%3C/svg%3E'
+              },
+              {
+                username: '云端漫步',
+                time: '45分钟前',
+                text: '太美了！我也准备夏天去阿尔卑斯山徒步，有旅行攻略分享吗？',
+                avatar: 'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2242%22 height=%2242%22 viewBox=%220 0 42 42%22%3E%3Ccircle cx=%2221%22 cy=%2221%22 r=%2221%22 fill=%22%239B59B6%22/%3E%3Ccircle cx=%2221%22 cy=%2215%22 r=%224%22 fill=%22%23ffffff%22/%3E%3Cpath d=%22M32,37 C32,37 27,32 21,32 C15,32 10,37 10,37 L10,33 C10,31.3431458 11.3431458,30 13,30 L29,30 C30.6568542,30 32,31.3431458 32,33 L32,37 Z%22 fill=%22%23ffffff%22/%3E%3C/svg%3E'
+              }
+            ],
+            newComment: ''
+          },
+          {
+            id: 2,
+            username: '都市甜心',
+            time: '5小时前',
+            icon: 'fas fa-utensils',
+            content: '发现隐藏在老胡同的绝妙甜品店—「甜梦空间」。老板是法国蓝带毕业，招牌薰衣草蒙布朗简直艺术品！口感轻盈似云，花香在舌尖绽放🌼🍰 #美食治愈',
+            avatarGradient: 'linear-gradient(45deg, #FF9FF3, #FDA7DF)',
+            liked: true,
+            likes: 202,
+            shares: 32,
+            showComments: false,
+            likeAnimate: false,
+            comments: [
+              {
+                username: '甜品猎人',
+                time: '3小时前',
+                text: '这家店我也去过！他们的夏日限定蜜桃舒芙蕾也超棒，强烈推荐',
+                avatar: 'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2242%22 height=%2242%22 viewBox=%220 0 42 42%22%3E%3Ccircle cx=%2221%22 cy=%2221%22 r=%2221%22 fill=%22%23E67E22%22/%3E%3Ccircle cx=%2221%22 cy=%2215%22 r=%224%22 fill=%22%23ffffff%22/%3E%3Cpath d=%22M32,37 C32,37 27,32 21,32 C15,32 10,37 10,37 L10,33 C10,31.3431458 11.3431458,30 13,30 L29,30 C30.6568542,30 32,31.3431458 32,33 L32,37 Z%22 fill=%22%23ffffff%22/%3E%3C/svg%3E'
+              },
+              {
+                username: '咖啡迷妹',
+                time: '2小时前',
+                text: '求具体位置！周末去打卡',
+                avatar: 'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2242%22 height=%2242%22 viewBox=%220 0 42 42%22%3E%3Ccircle cx=%2221%22 cy=%2221%22 r=%2221%22 fill=%22%233498DB%22/%3E%3Ccircle cx=%2221%22 cy=%2215%22 r=%224%22 fill=%22%23ffffff%22/%3E%3Cpath d=%22M32,37 C32,37 27,32 21,32 C15,32 10,37 10,37 L10,33 C10,31.3431458 11.3431458,30 13,30 L29,30 C30.6568542,30 32,31.3431458 32,33 L32,37 Z%22 fill=%22%23ffffff%22/%3E%3C/svg%3E'
+              }
+            ],
+            newComment: ''
+          },
+          {
+            id: 3,
+            username: '艺术之心',
+            time: '昨天',
+            icon: 'fas fa-palette',
+            content: '新作完成：紫色晨曦系列No.5。水彩与金箔的完美融合，捕捉日出时紫罗兰色天空的瞬息之美。创作灵感来源于普罗旺斯的晨曦...艺术是心灵的镜子🎨✨',
+            image: 'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22 viewBox=%220 0 400 300%22%3E%3Crect width=%22400%22 height=%22300%22 fill=%22%234A4A9C%22/%3E%3Crect x=%2250%22 y=%2240%22 width=%22300%22 height=%22220%22 fill=%22%23D6B3EB%22/%3E%3Ccircle cx=%22200%22 cy=%22150%22 r=%2280%22 fill=%22%239B59B6%22/%3E%3Ccircle cx=%22250%22 cy=%22100%22 r=%2240%22 fill=%22%238E44AD%22/%3E%3Cpolygon points=%22300,220 350,180 320,250%22 fill=%22%23633C90%22/%3E%3C/svg%3E',
+            avatarGradient: 'linear-gradient(45deg, #D6A2E8, #B57EDC)',
+            liked: false,
+            likes: 158,
+            shares: 24,
+            showComments: false,
+            likeAnimate: false,
+            comments: [
+              {
+                username: '艺廊主人',
+                time: '22小时前',
+                text: '太惊艳了！我们下个月有紫色主题艺术展，能否授权展出？',
+                avatar: 'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2242%22 height=%2242%22 viewBox=%220 0 42 42%22%3E%3Ccircle cx=%2221%22 cy=%2221%22 r=%2221%22 fill=%22%238E44AD%22/%3E%3Ccircle cx=%2221%22 cy=%2215%22 r=%224%22 fill=%22%23ffffff%22/%3E%3Cpath d=%22M32,37 C32,37 27,32 21,32 C15,32 10,37 10,37 L10,33 C10,31.3431458 11.3431458,30 13,30 L29,30 C30.6568542,30 32,31.3431458 32,33 L32,37 Z%22 fill=%22%23ffffff%22/%3E%3C/svg%3E'
+              }
+            ],
+            newComment: ''
+          }
+        ])
+        
+        // 添加新动态
+        const addPost = () => {
+          if (!newPost.content) return
+          
+          const newId = posts.value.length + 1
+          const avatars = [
+            'linear-gradient(45deg, #9C27B0, #7B1FA2)',
+            'linear-gradient(45deg, #673AB7, #512DA8)',
+            'linear-gradient(45deg, #3F51B5, #303F9F)'
+          ]
+          
+          posts.value.unshift({
+            id: newId,
+            username: '你',
+            time: '刚刚',
+            icon: 'fas fa-user-astronaut',
+            content: newPost.content,
+            image: newPost.image,
+            avatarGradient: avatars[Math.floor(Math.random() * avatars.length)],
+            liked: false,
+            likes: 0,
+            shares: 0,
+            showComments: false,
+            likeAnimate: false,
+            comments: [],
+            newComment: ''
+          })
+          
+          // 重置发布框
+          newPost.content = ''
+          newPost.image = ''
+        }
+        
+        // 触发图片上传
+        const triggerImageUpload = () => {
+          newPost.image = 'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22 viewBox=%220 0 400 300%22%3E%3Crect width=%22400%22 height=%22300%22 fill=%22%239B59B6%22/%3E%3Crect x=%2260%22 y=%2280%22 width=%22280%22 height=%22150%22 fill=%22%238E44AD%22/%3E%3Ccircle cx=%22200%22 cy=%22150%22 r=%2260%22 fill=%22%23D7BDE2%22/%3E%3Ctext x=%22200%22 y=%22160%22 font-family=%22Arial%22 font-size=%2220%22 fill=%22%23FFFFFF%22 text-anchor=%22middle%22%3E上传的图片%3C/text%3E%3C/svg%3E'
+        }
+        
+        // 添加表情符号
+        const addEmoji = () => {
+          const emojis = ['😊', '🌸', '✨', '🌟', '💜', '📷', '🍰', '🎨', '✈️', '🏔️']
+          const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)]
+          newPost.content += randomEmoji
+        }
+        
+        // 点赞功能
+        const toggleLike = (postId) => {
+          const post = posts.value.find(p => p.id === postId)
+          if (!post) return
+          
+          post.liked = !post.liked
+          post.likeAnimate = true
+          
+          if (post.liked) {
+            post.likes++
+          } else {
+            post.likes--
+          }
+          
+          // 动画完成后重置状态
+          setTimeout(() => {
+            post.likeAnimate = false
+          }, 800)
+        }
+        
+        // 评论功能
+        const toggleComments = (postId) => {
+          const post = posts.value.find(p => p.id === postId)
+          if (post) {
+            post.showComments = !post.showComments
+          }
+        }
+        
+        // 添加评论
+        const addComment = (postId) => {
+          const post = posts.value.find(p => p.id === postId)
+          if (!post || !post.newComment) return
+          
+          post.comments.push({
+            username: '你',
+            time: '刚刚',
+            text: post.newComment,
+            avatar: 'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2242%22 height=%2242%22 viewBox=%220 0 42 42%22%3E%3Ccircle cx=%2221%22 cy=%2221%22 r=%2221%22 fill=%22%239B59B6%22/%3E%3Ccircle cx=%2221%22 cy=%2215%22 r=%224%22 fill=%22%23ffffff%22/%3E%3Cpath d=%22M32,37 C32,37 27,32 21,32 C15,32 10,37 10,37 L10,33 C10,31.3431458 11.3431458,30 13,30 L29,30 C30.6568542,30 32,31.3431458 32,33 L32,37 Z%22 fill=%22%23ffffff%22/%3E%3C/svg%3E'
+          })
+          
+          post.newComment = ''
+        }
+        
+        // 分享功能
+        const sharePost = (postId) => {
+          const post = posts.value.find(p => p.id === postId)
+          if (post) {
+            post.shares++
+            alert('已复制动态链接到剪贴板！可分享给你的好友')
+          }
+        }
+        
+        return {
+          newPost,
+          posts,
+          addPost,
+          toggleLike,
+          toggleComments,
+          addComment,
+          sharePost,
+          triggerImageUpload,
+          addEmoji
+        }
+      }
+    }).mount('#app')
+  </script>
+</body>
+</html>

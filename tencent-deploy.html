@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tencent CloudBase Deployment</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; }
+        .container { max-width: 600px; margin: 0 auto; text-align: center; }
+        .button { display: inline-block; padding: 15px 30px; margin: 10px; background: white; color: #667eea; text-decoration: none; border-radius: 25px; font-weight: bold; transition: transform 0.2s; }
+        .button:hover { transform: translateY(-2px); }
+        .step { background: rgba(255,255,255,0.1); padding: 20px; margin: 10px 0; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Tencent CloudBase Deployment</h1>
+        <p>China-accessible deployment solution</p>
+        
+        <div class="step">
+            <h3>Step 1: Prepare Files</h3>
+            <p>Ready: <code>dist.zip</code></p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 2: Deploy</h3>
+            <a href="https://console.cloud.tencent.com/tcb/hosting" class="button" target="_blank">
+                Open Tencent CloudBase
+            </a>
+            <a href="https://console.cloud.tencent.com/tcb/env/index" class="button" target="_blank">
+                Create Environment
+            </a>
+        </div>
+        
+        <div class="step">
+            <h3>📋 Detailed Steps</h3>
+            <ol style="text-align: left;">
+                <li>Login to Tencent Cloud (WeChat scan)</li>
+                <li>Create environment (free tier available)</li>
+                <li>Select "Static Website Hosting"</li>
+                <li>Upload <strong>dist.zip</strong> file</li>
+                <li>Deploy and get China-accessible URL</li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <h3>🎯 Alternative Solutions</h3>
+            <a href="#" class="button" onclick="openLocal()">
+                Local Test
+            </a>
+            <a href="#" class="button" onclick="openGitHub()">
+                GitHub Pages
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function openLocal() {
+            window.open('local-test.html', '_blank');
+        }
+        
+        function openGitHub() {
+            window.open('https://github.com/new', '_blank');
+        }
+    </script>
+</body>
+</html>

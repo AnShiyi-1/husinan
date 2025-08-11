@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git身份配置指南</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+        .step {
+            background: rgba(255, 255, 255, 0.2);
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #00ff88;
+        }
+        .command {
+            background: #1e1e1e;
+            color: #00ff88;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            border-left: 3px solid #00ff88;
+        }
+        .button {
+            background: linear-gradient(45deg, #00ff88, #00cc6a);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: transform 0.3s;
+        }
+        .button:hover {
+            transform: scale(1.05);
+        }
+        .warning {
+            background: rgba(255, 193, 7, 0.2);
+            border-left: 4px solid #ffc107;
+            color: #fff;
+        }
+        .success {
+            background: rgba(40, 167, 69, 0.2);
+            border-left: 4px solid #28a745;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛠️ Git身份配置指南</h1>
+        
+        <div class="warning step">
+            <h3>❗ 问题说明</h3>
+            <p>Git需要配置用户名和邮箱才能提交代码，这是Git的安全机制。</p>
+        </div>
+
+        <div class="step">
+            <h3>🔧 一键解决方案</h3>
+            <p>运行自动配置脚本：</p>
+            <button class="button" onclick="runConfigScript()">运行配置脚本</button>
+            <button class="button" onclick="runManualConfig()">手动配置</button>
+        </div>
+
+        <div class="step">
+            <h3>📝 手动配置步骤</h3>
+            <p>在终端中依次执行以下命令：</p>
+            <div class="command">
+git config --global user.name "AnShiyi-1"
+            </div>
+            <div class="command">
+git config --global user.email "anshiyi-1@users.noreply.github.com"
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>✅ 验证配置</h3>
+            <p>检查配置是否成功：</p>
+            <div class="command">
+git config --global user.name
+git config --global user.email
+            </div>
+        </div>
+
+        <div class="success step">
+            <h3>🎯 配置完成后</h3>
+            <p>现在你可以正常使用这些命令：</p>
+            <div class="command">
+git add .
+git commit -m "你的提交信息"
+git push origin main
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>💡 小贴士</h3>
+            <ul>
+                <li>用户名可以是任意字符串，不一定是GitHub用户名</li>
+                <li>邮箱可以是GitHub提供的noreply邮箱</li>
+                <li>配置只需做一次，全局生效</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function runConfigScript() {
+            window.open('CONFIG_GIT.bat', '_blank');
+        }
+
+        function runManualConfig() {
+            const commands = [
+                'git config --global user.name "AnShiyi-1"',
+                'git config --global user.email "anshiyi-1@users.noreply.github.com"'
+            ];
+            
+            alert('请在终端中依次执行以下命令：\n\n' + commands.join('\n'));
+        }
+
+        // 页面加载完成后的提示
+        window.onload = function() {
+            console.log('Git配置指南已加载');
+        };
+    </script>
+</body>
+</html>

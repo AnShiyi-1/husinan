@@ -1,0 +1,17 @@
+# 部署就绪文件说明
+
+这个压缩包包含可以直接部署到GitHub Pages的所有文件：
+
+## 📁 文件列表：
+- index.html (主页面)
+- assets/ (CSS和JS文件)
+- *.svg (图标文件)
+
+## 🚀 部署步骤：
+1. 解压此文件
+2. 上传到GitHub仓库
+3. 启用GitHub Pages
+4. 完成部署
+
+## 🌐 在线地址：
+https://AnShiyi-1.github.io/qxhb

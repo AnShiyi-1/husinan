@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录调试</title>
+</head>
+<body>
+    <h1>登录调试页面</h1>
+    <button id="loginBtn">测试登录</button>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            try {
+                const loginForm = {
+                    username: 'testuser',
+                    password: 'password123',
+                    remember: false
+                };
+
+                console.log('发送登录请求:', loginForm);
+                
+                const response = await fetch('http://localhost:3001/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(loginForm)
+                });
+                
+                const data = await response.json();
+                console.log('登录响应:', data);
+                
+                if (data.user && data.token) {
+                    document.getElementById('result').innerHTML = '<p style="color: green;">登录成功!</p>';
+                    console.log('登录成功!');
+                    // 存储token
+                    localStorage.setItem('token', data.token);
+                    console.log('Token已存储');
+                } else {
+                    document.getElementById('result').innerHTML = '<p style="color: red;">登录失败: ' + (data.error || '未知错误') + '</p>';
+                    console.log('登录失败:', data.error || '未知错误');
+                }
+            } catch (error) {
+                console.error('登录请求失败:', error);
+                document.getElementById('result').innerHTML = '<p style="color: red;">登录请求失败: ' + error.message + '</p>';
+            }
+        });
+    </script>
+</body>
+</html>

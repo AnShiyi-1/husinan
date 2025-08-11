@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 拖拽部署 - 情绪画布</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .drop-zone {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 60px 20px;
+            margin: 30px 0;
+            background: #f8f9ff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        .drop-zone:hover {
+            border-color: #764ba2;
+            background: #f0f2ff;
+        }
+        .drop-zone.dragover {
+            border-color: #28a745;
+            background: #d4edda;
+            transform: scale(1.02);
+        }
+        .icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .progress {
+            display: none;
+            margin: 20px 0;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .file-list {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .file-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+        }
+        .file-item:last-child {
+            border-bottom: none;
+        }
+        .file-icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">🎯</div>
+        <h1>终极拖拽部署方案</h1>
+        <p>无需找按钮，直接拖拽即可完成部署！</p>
+        
+        <div class="file-list">
+            <h4>📋 已准备好的文件：</h4>
+            <div class="file-item"><span class="file-icon">📄</span> index.html</div>
+            <div class="file-item"><span class="file-icon">📁</span> assets/ (包含所有CSS/JS)</div>
+            <div class="file-item"><span class="file-icon">🎨</span> 4个SVG图标文件</div>
+        </div>
+
+        <div style="background: #fff3cd; padding: 20px; border-radius: 10px; margin: 20px 0;">
+            <strong>🚀 超简单3步完成：</strong>
+            <ol style="text-align: left;">
+                <li>点击下面的"打开GitHub"按钮</li>
+                <li>在新打开的页面中，<strong>直接拖拽</strong>下面的文件到浏览器</li>
+                <li>等待5分钟，完成！</li>
+            </ol>
+        </div>
+
+        <div class="drop-zone" id="dropZone">
+            <div class="icon">📁</div>
+            <h3>拖拽区域（演示）</h3>
+            <p>实际使用时，拖拽到GitHub页面即可</p>
+        </div>
+
+        <div class="progress" id="progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="progressText">准备上传...</p>
+        </div>
+
+        <div>
+            <button class="button" onclick="openGitHub()">🐙 打开GitHub仓库</button>
+            <button class="button" onclick="openFiles()">📁 打开本地文件</button>
+            <button class="button" onclick="downloadPackage()">📦 下载完整包</button>
+        </div>
+
+        <div class="success" id="success">
+            <div class="icon">✅</div>
+            <h3>上传完成！</h3>
+            <p>现在访问您的网站：<br>
+            <a href="https://anshiyi-1.github.io/qxhb" target="_blank" class="button" style="background: #28a745;">
+                🚀 立即访问情绪画布
+            </a>
+            </p>
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+            <strong>🔍 找不到上传按钮的终极解决方案：</strong><br>
+            1. 打开GitHub仓库后，<strong>直接拖拽</strong>文件到浏览器窗口<br>
+            2. 系统会自动弹出上传对话框<br>
+            3. 无需寻找任何按钮！
+        </div>
+    </div>
+
+    <script>
+        function openGitHub() {
+            window.open('https://github.com/AnShiyi-1/qxhb', '_blank');
+        }
+
+        function openFiles() {
+            window.open('file:///C:/Users/Firday1/Desktop/绘画软件/dist', '_blank');
+        }
+
+        function downloadPackage() {
+            const link = document.createElement('a');
+            link.href = 'github-upload-ready.zip';
+            link.download = 'github-upload-ready.zip';
+            link.click();
+        }
+
+        // 模拟拖拽上传
+        const dropZone = document.getElementById('dropZone');
+        
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            
+            // 模拟上传进度
+            document.getElementById('progress').style.display = 'block';
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                document.getElementById('progressFill').style.width = progress + '%';
+                document.getElementById('progressText').textContent = `上传中... ${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    document.getElementById('progressText').textContent = '上传完成！';
+                    setTimeout(() => {
+                        document.getElementById('success').style.display = 'block';
+                    }, 1000);
+                }
+            }, 200);
+        });
+
+        // 3秒后自动打开GitHub
+        setTimeout(() => {
+            openGitHub();
+        }, 3000);
+    </script>
+</body>
+</html>

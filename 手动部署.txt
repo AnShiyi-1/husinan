@@ -1,0 +1,20 @@
+🎯 手动部署到Vercel（3步完成）
+
+步骤1：打开CMD/PowerShell
+- Win+R → 输入 cmd → 回车
+
+步骤2：进入项目目录
+cd c:\Users\Firday1\Desktop\绘画软件
+
+步骤3：运行以下命令
+npm install          # 安装依赖
+npm run build        # 构建项目
+npm install -g vercel  # 安装Vercel CLI
+vercel --prod        # 部署到生产环境
+
+🚀 部署完成后，你会获得：https://your-app.vercel.app
+
+💡 如果遇到问题：
+1. 确保Node.js已安装
+2. 检查网络连接
+3. 使用管理员权限运行CMD

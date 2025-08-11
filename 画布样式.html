@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>ArtMaster - 修复缩放问题</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            touch-action: none;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            min-height: 100vh;
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            height: 97vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(to right, #3a1c71, #d76d77, #ffaf7b);
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 3px solid rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+            background: white;
+            color: #ff6b6b;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .logo h1 {
+            font-weight: 800;
+            font-size: 1.6rem;
+            letter-spacing: 1px;
+        }
+
+        .user-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .user-controls button {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .user-controls button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            height: calc(100% - 110px);
+            overflow: hidden;
+        }
+
+        .tools-panel {
+            width: 260px;
+            background: #f8f9fa;
+            border-right: 1px solid #eee;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            height: 100%;
+            transition: all 0.3s;
+        }
+
+        .panel-section {
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .panel-section h3 {
+            color: #5c5c5c;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tools {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tool-btn {
+            width: 65px;
+            height: 65px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #555;
+            font-size: 0.8rem;
+        }
+
+        .tool-btn:hover {
+            border-color: #3a1c71;
+            transform: translateY(-3px);
+        }
+
+        .tool-btn.active {
+            border-color: #ff6b6b;
+            background: #fff5f5;
+            color: #ff6b6b;
+        }
+
+        .tool-btn i {
+            font-size: 1.3rem;
+            margin-bottom: 4px;
+        }
+
+        .color-picker {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .color-item {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .color-item:hover, .color-item.active {
+            transform: scale(1.1);
+            border: 2px solid #333;
+        }
+
+        .slider-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+
+        .slider-control label {
+            color: #666;
+            min-width: 55px;
+        }
+
+        .slider-control input[type="range"] {
+            flex: 1;
+        }
+
+        .canvas-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            position: relative;
+            background: #f0f2f5 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect fill="none" stroke="%23eaeaea" stroke-width="0.5" x="0.5" y="0.5" width="39" height="39"/></svg>');
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            transform-origin: 0 0;
+            cursor: grab;
+        }
+
+        #drawing-canvas {
+            display: block;
+            background: white;
+            cursor: default;
+        }
+
+        #preview-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .layer-control {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.9);
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 20;
+            width: 220px;
+            max-height: 80vh;
+            overflow: auto;
+        }
+
+        .layer-control .layers-container {
+            max-height: 180px;
+            overflow-y: auto;
+            margin-top: 8px;
+            border: 1px solid #eee;
+            padding: 4px;
+            border-radius: 5px;
+        }
+
+        .layer-item {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .layer-item.active {
+            background-color: #e3f2fd;
+            border-left: 3px solid #2196f3;
+        }
+
+        .layer-item:last-child {
+            border-bottom: none;
+        }
+
+        .layer-item .layer-name {
+            flex: 1;
+            padding: 0 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .layer-buttons button {
+            padding: 3px;
+            margin-left: 3px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .layer-buttons button i {
+            font-size: 0.8rem;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .status-bar {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .canvas-controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .canvas-controls button {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 7px 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+        }
+
+        .canvas-controls button:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .color-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        #custom-color {
+            width: 28px;
+            height: 28px;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .preset-size {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .preset-size button {
+            flex: 1;
+            background: #e9ecef;
+            border: none;
+            padding: 7px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .preset-size button:hover {
+            background: #d8dadd;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .selection-rect {
+            position: absolute;
+            border: 2px dashed #2196F3;
+            background: rgba(33, 150, 243, 0.1);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .transform-controls {
+            position: absolute;
+            background: white;
+            border-radius: 4px;
+            padding: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 30;
+            display: flex;
+            gap: 4px;
+        }
+
+        .transform-controls button {
+            background: #f1f3f5;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .ai-tools {
+            background: #e3f2fd;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 8px;
+        }
+
+        .tool-explanation {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 8px;
+            margin-top: 12px;
+            font-size: 0.8rem;
+        }
+
+        .tool-explanation h4 {
+            margin-bottom: 6px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        .tool-explanation ul {
+            padding-left: 18px;
+        }
+
+        .tool-explanation li {
+            margin-bottom: 4px;
+            font-size: 0.8rem;
+        }
+
+        .zoom-controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 25;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .zoom-controls button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #f1f3f5;
+            border: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+
+        .zoom-controls button:hover {
+            background: #e2e6ea;
+        }
+
+        .mobile-toolbar {
+            display: none;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            padding: 8px;
+            z-index: 25;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            gap: 8px;
+        }
+
+        .mobile-toolbar button {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #f1f3f5;
+            border: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .mobile-toolbar .active-tool {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .toggle-tools {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 8px 12px;
+            z-index: 25;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            cursor: pointer;
+            display: none;
+            font-weight: 600;
+        }
+
+        @media (max-width: 1200px) {
+            .tools-panel {
+                width: 220px;
+            }
+            
+            .tool-btn {
+                width: 60px;
+                height: 60px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .tools-panel {
+                width: 100%;
+                height: auto;
+                max-height: 40%;
+                position: absolute;
+                left: 0;
+                top: 0;
+                z-index: 30;
+                transform: translateX(-100%);
+                box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+            }
+            
+            .tools-panel.active {
+                transform: translateX(0);
+            }
+            
+            .toggle-tools {
+                display: block;
+            }
+            
+            .mobile-toolbar {
+                display: flex;
+            }
+            
+            .user-controls button span {
+                display: none;
+            }
+            
+            .user-controls button i {
+                margin: 0;
+            }
+            
+            .logo h1 {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                height: 95vh;
+            }
+            
+            header {
+                padding: 10px 15px;
+            }
+            
+            .logo i {
+                width: 38px;
+                height: 38px;
+                font-size: 1.5rem;
+            }
+            
+            .user-controls button {
+                padding: 6px 12px;
+            }
+            
+            footer {
+                padding: 10px 15px;
+            }
+            
+            .status-bar {
+                font-size: 0.8rem;
+            }
+            
+            .canvas-controls button {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .mobile-toolbar {
+                bottom: 10px;
+            }
+            
+            .mobile-toolbar button {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <header>
+                <div class="logo">
+                    <i class="fas fa-paint-brush"></i>
+                    <h1>ArtMaster <small>修复缩放问题</small></h1>
+                </div>
+                <div class="user-controls">
+                    <button><i class="fas fa-save"></i> <span>保存</span></button>
+                    <button><i class="fas fa-cloud-upload-alt"></i> <span>导出</span></button>
+                    <button><i class="fas fa-user"></i> <span>登录</span></button>
+                </div>
+            </header>
+            
+            <div class="main-content">
+                <div class="toggle-tools" @click="toggleToolsPanel">
+                    <i class="fas fa-bars"></i> 工具
+                </div>
+                
+                <div class="tools-panel" :class="{active: toolsPanelVisible}">
+                    <div class="panel-section">
+                        <h3><i class="fas fa-pencil-alt"></i> 绘画工具</h3>
+                        <div class="tools">
+                            <div v-for="(tool, index) in tools" :key="index" 
+                                class="tool-btn" :class="{active: currentTool === tool.name}"
+                                @click="selectTool(tool.name)" :title="tool.name">
+                                <i :class="tool.icon"></i>
+                                <span>{{ tool.name }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="panel-section">
+                        <h3><i class="fas fa-palette"></i> 颜色</h3>
+                        <div class="color-picker">
+                            <div v-for="(color, index) in colorPalette" :key="index" 
+                                class="color-item" :class="{active: currentColor === color}"
+                                :style="{backgroundColor: color}" 
+                                :title="color"
+                                @click="selectColor(color)"></div>
+                        </div>
+                        
+                        <div class="color-input">
+                            <span>自定义:</span>
+                            <input type="color" id="custom-color" v-model="customColor" @change="selectColor(customColor)">
+                        </div>
+                    </div>
+                    
+                    <div class="panel-section">
+                        <h3><i class="fas fa-sliders-h"></i> 笔刷设置</h3>
+                        <div class="slider-control">
+                            <label>大小:</label>
+                            <input type="range" min="1" max="50" v-model="brushSize">
+                            <span>{{ brushSize }}px</span>
+                        </div>
+                        
+                        <div class="slider-control">
+                            <label>透明度:</label>
+                            <input type="range" min="1" max="100" v-model="opacity">
+                            <span>{{ opacity }}%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="panel-section">
+                        <h3><i class="fas fa-vector-square"></i> 画布设置</h3>
+                        <div class="preset-size">
+                            <button @click="setCanvasSize(800, 600)">800×600</button>
+                            <button @click="setCanvasSize(1024, 768)">1024×768</button>
+                        </div>
+                    </div>
+                    
+                    <div class="panel-section ai-tools">
+                        <h3><i class="fas fa-robot"></i> AI助手</h3>
+                        <button @click="applyAI('colorize')" class="ai-btn">
+                            <i class="fas fa-fill-drip"></i> 智能上色
+                        </button>
+                    </div>
+                    
+                    <div class="tool-explanation">
+                        <h4><i class="fas fa-lightbulb"></i> 使用说明：</h4>
+                        <ul>
+                            <li><strong>缩放</strong>: 鼠标滚轮或双指捏合</li>
+                            <li><strong>移动</strong>: 拖动画布或双指平移</li>
+                            <li><strong>移动端</strong>: 使用底部工具栏快速切换工具</li>
+                            <li><strong>图层</strong>: 点击图层名称切换当前图层</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="canvas-container" 
+                     @wheel.prevent="handleWheel"
+                     @mousedown="startPan"
+                     @mousemove="handlePan"
+                     @mouseup="endPan"
+                     @mouseleave="endPan"
+                     @touchstart="handleTouchStart"
+                     @touchmove="handleTouchMove"
+                     @touchend="handleTouchEnd">
+                    <div class="canvas-wrapper" ref="canvasWrapper">
+                        <canvas id="drawing-canvas" :width="canvasWidth" :height="canvasHeight"></canvas>
+                        <canvas id="preview-canvas" :width="canvasWidth" :height="canvasHeight"></canvas>
+                        <div class="layer-control">
+                            <h3><i class="fas fa-layer-group"></i> 图层 ({{ layers.length }})</h3>
+                            <div class="layers-container">
+                                <div v-for="(layer, index) in layers" 
+                                     :key="index" 
+                                     class="layer-item"
+                                     :class="{active: index === currentLayerIndex}"
+                                     @click="currentLayerIndex = index">
+                                    <span>{{ index + 1 }}. </span>
+                                    <span class="layer-name">{{ layer.name || ('图层 ' + (index + 1)) }}</span>
+                                    <div class="layer-buttons">
+                                        <button title="删除图层" @click.stop="removeLayer(index)" 
+                                            v-if="index !== 0"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slider-control" style="margin-top: 10px;">
+                                <label>不透明度:</label>
+                                <input type="range" min="0" max="100" v-model="layerOpacity" @input="updateLayerOpacity">
+                            </div>
+                            <button @click="addNewLayer" style="margin-top: 10px; width: 100%;">添加图层</button>
+                        </div>
+                        <div class="selection-rect" v-if="selection.active" 
+                            :style="{
+                                left: selection.x + 'px',
+                                top: selection.y + 'px',
+                                width: selection.width + 'px',
+                                height: selection.height + 'px'
+                            }"></div>
+                        <div class="transform-controls" v-if="activeSelection" 
+                            :style="{
+                                left: (selection.x + selection.width + 10) + 'px',
+                                top: selection.y + 'px'
+                            }">
+                            <button @click="moveSelection(0, -5)"><i class="fas fa-arrow-up"></i></button>
+                            <button @click="moveSelection(0, 5)"><i class="fas fa-arrow-down"></i></button>
+                            <button @click="moveSelection(-5, 0)"><i class="fas fa-arrow-left"></i></button>
+                            <button @click="moveSelection(5, 0)"><i class="fas fa-arrow-right"></i></button>
+                            <button @click="deleteSelection"><i class="fas fa-trash"></i></button>
+                        </div>
+                        <div class="tooltip" v-if="tooltip.show" 
+                            :style="{left: tooltip.x + 'px', top: tooltip.y + 'px'}">
+                            {{ tooltip.text }}
+                        </div>
+                    </div>
+                    
+                    <div class="zoom-controls">
+                        <button @click="zoomIn"><i class="fas fa-search-plus"></i></button>
+                        <button @click="zoomOut"><i class="fas fa-search-minus"></i></button>
+                        <button @click="resetView"><i class="fas fa-sync-alt"></i></button>
+                        <button @click="showDebugInfo = !showDebugInfo"><i class="fas fa-bug"></i></button>
+                    </div>
+                </div>
+                
+                <div class="mobile-toolbar">
+                    <button @click="selectTool('铅笔')" :class="{ 'active-tool': currentTool === '铅笔' }">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                    <button @click="selectTool('画笔')" :class="{ 'active-tool': currentTool === '画笔' }">
+                        <i class="fas fa-paint-brush"></i>
+                    </button>
+                    <button @click="selectTool('橡皮')" :class="{ 'active-tool': currentTool === '橡皮' }">
+                        <i class="fas fa-eraser"></i>
+                    </button>
+                    <button @click="selectTool('填充')" :class="{ 'active-tool': currentTool === '填充' }">
+                        <i class="fas fa-fill"></i>
+                    </button>
+                    <button @click="undo">
+                        <i class="fas fa-undo"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <footer>
+                <div class="status-bar">
+                    <div><i class="fas fa-layer-group"></i> 图层: {{ currentLayer.name }}</div>
+                    <div><i class="fas fa-drafting-compass"></i> 工具: {{ currentTool }}</div>
+                    <div><i class="fas fa-ruler"></i> 大小: {{ brushSize }}px</div>
+                    <div><i class="fas fa-palette"></i> 颜色: {{ currentColor }}</div>
+                    <div><i class="fas fa-expand"></i> 缩放: {{ Math.round(scale * 100) }}%</div>
+                </div>
+                <div class="canvas-controls">
+                    <button @click="undo"><i class="fas fa-undo"></i> 撤销</button>
+                    <button @click="redo"><i class="fas fa-redo"></i> 重做</button>
+                    <button @click="clearCanvas"><i class="fas fa-trash-alt"></i> 清空</button>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref, onMounted, reactive, computed } = Vue;
+        
+        createApp({
+            setup() {
+                const tools = ref([
+                    { name: '铅笔', icon: 'fas fa-pencil-alt', color: '#9e9e9e' },
+                    { name: '画笔', icon: 'fas fa-paint-brush' },
+                    { name: '橡皮', icon: 'fas fa-eraser' },
+                    { name: '填充', icon: 'fas fa-fill' },
+                    { name: '直线', icon: 'fas fa-grip-lines' },
+                    { name: '圆形', icon: 'far fa-circle' },
+                    { name: '矩形', icon: 'far fa-square' },
+                    { name: '选择', icon: 'fas fa-mouse-pointer' }
+                ]);
+                
+                const currentTool = ref('铅笔');
+                const brushSize = ref(5);
+                const opacity = ref(100);
+                const layerOpacity = ref(100);
+                const toolsPanelVisible = ref(false);
+                const showDebugInfo = ref(false);
+                
+                const colorPalette = ref([
+                    '#9e9e9e', '#f44336', '#e91e63', '#9c27b0', '#673ab7',
+                    '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688',
+                    '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107',
+                    '#ff9800', '#ff5722', '#795548', '#607d8b', '#000000'
+                ]);
+                
+                const currentColor = ref('#9e9e9e');
+                const customColor = ref('#ff0000');
+                
+                const layers = ref([
+                    { 
+                        name: '背景', 
+                        visible: true, 
+                        opacity: 100, 
+                        objects: [],
+                        canvas: null,
+                        ctx: null
+                    },
+                    { 
+                        name: '草图', 
+                        visible: true, 
+                        opacity: 100, 
+                        objects: [],
+                        canvas: null,
+                        ctx: null
+                    }
+                ]);
+                
+                const currentLayerIndex = ref(1);
+                const canvasWidth = ref(800);
+                const canvasHeight = ref(600);
+                const drawingCtx = ref(null);
+                const previewCtx = ref(null);
+                const drawingCanvas = ref(null);
+                const previewCanvas = ref(null);
+                const canvasWrapper = ref(null);
+                const isDrawing = ref(false);
+                const lastX = ref(0);
+                const lastY = ref(0);
+                const startX = ref(0);
+                const startY = ref(0);
+                const isDrawingShape = ref(false);
+                const shapePoints = ref([]);
+                const selection = reactive({
+                    active: false,
+                    x: 0,
+                    y: 0,
+                    width: 0,
+                    height: 0
+                });
+                const activeSelection = ref(null);
+                const history = ref([]);
+                const historyIndex = ref(-1);
+                const tooltip = reactive({
+                    show: false,
+                    x: 0,
+                    y: 0,
+                    text: ''
+                });
+                
+                // 缩放和平移状态
+                const scale = ref(1);
+                const offsetX = ref(0);
+                const offsetY = ref(0);
+                const isPanning = ref(false);
+                const panStartX = ref(0);
+                const panStartY = ref(0);
+                const touchStartDistance = ref(0);
+                const touchStartScale = ref(1);
+                const touchPoints = ref([]);
+
+                // 计算当前图层
+                const currentLayer = computed(() => {
+                    return layers.value[currentLayerIndex.value];
+                });
+
+                // 使用矩阵变换计算坐标
+                function getCanvasCoordinates(e) {
+                    const rect = canvasWrapper.value.getBoundingClientRect();
+                    const containerX = e.clientX - rect.left;
+                    const containerY = e.clientY - rect.top;
+                    
+                    // 使用逆变换计算画布坐标
+                    const x = (containerX - offsetX.value) / scale.value;
+                    const y = (containerY - offsetY.value) / scale.value;
+                    
+                    return {
+                        x: Math.max(0, Math.min(x, canvasWidth.value)),
+                        y: Math.max(0, Math.min(y, canvasHeight.value))
+                    };
+                }
+                
+                // 获取触摸坐标
+                function getTouchCoordinates(touch) {
+                    const rect = canvasWrapper.value.getBoundingClientRect();
+                    const containerX = touch.clientX - rect.left;
+                    const containerY = touch.clientY - rect.top;
+                    
+                    const x = (containerX - offsetX.value) / scale.value;
+                    const y = (containerY - offsetY.value) / scale.value;
+                    
+                    return {
+                        x: Math.max(0, Math.min(x, canvasWidth.value)),
+                        y: Math.max(0, Math.min(y, canvasHeight.value))
+                    };
+                }
+                
+                onMounted(() => {
+                    drawingCanvas.value = document.getElementById('drawing-canvas');
+                    previewCanvas.value = document.getElementById('preview-canvas');
+                    drawingCtx.value = drawingCanvas.value.getContext('2d');
+                    previewCtx.value = previewCanvas.value.getContext('2d');
+                    
+                    // 为每个图层创建离屏画布
+                    layers.value.forEach(layer => {
+                        layer.canvas = document.createElement('canvas');
+                        layer.canvas.width = canvasWidth.value;
+                        layer.canvas.height = canvasHeight.value;
+                        layer.ctx = layer.canvas.getContext('2d');
+                        layer.ctx.fillStyle = 'rgba(0,0,0,0)';
+                        layer.ctx.fillRect(0, 0, layer.canvas.width, layer.canvas.height);
+                    });
+                    
+                    drawingCtx.value.lineJoin = 'round';
+                    drawingCtx.value.lineCap = 'round';
+                    drawingCtx.value.globalAlpha = opacity.value / 100;
+                    previewCtx.value.strokeStyle = '#2196F3';
+                    previewCtx.value.setLineDash([5, 5]);
+                    
+                    // 添加事件监听器
+                    drawingCanvas.value.addEventListener('mousedown', startDrawing);
+                    drawingCanvas.value.addEventListener('mousemove', draw);
+                    drawingCanvas.value.addEventListener('mouseup', stopDrawing);
+                    drawingCanvas.value.addEventListener('mouseout', stopDrawing);
+                    
+                    // 绘制初始图层内容
+                    redrawAllLayers();
+                    saveState();
+                    
+                    // 初始视图居中
+                    centerView();
+                });
+                
+                // 居中视图
+                function centerView() {
+                    const container = document.querySelector('.canvas-container');
+                    const rect = container.getBoundingClientRect();
+                    
+                    offsetX.value = (rect.width - canvasWidth.value) / 2;
+                    offsetY.value = (rect.height - canvasHeight.value) / 2;
+                }
+                
+                // 重绘所有图层
+                function redrawAllLayers() {
+                    // 清空主画布
+                    drawingCtx.value.clearRect(0, 0, drawingCanvas.value.width, drawingCanvas.value.height);
+                    
+                    // 应用当前变换
+                    drawingCtx.value.save();
+                    drawingCtx.value.translate(offsetX.value, offsetY.value);
+                    drawingCtx.value.scale(scale.value, scale.value);
+                    
+                    // 按顺序绘制所有图层
+                    layers.value.forEach(layer => {
+                        if (layer.visible) {
+                            drawingCtx.value.globalAlpha = layer.opacity / 100;
+                            drawingCtx.value.drawImage(layer.canvas, 0, 0);
+                        }
+                    });
+                    
+                    drawingCtx.value.restore();
+                    
+                    // 重置全局透明度
+                    drawingCtx.value.globalAlpha = 1;
+                }
+                
+                // 缩放功能
+                function handleWheel(e) {
+                    e.preventDefault();
+                    const delta = e.deltaY < 0 ? 1.1 : 0.9;
+                    const rect = canvasWrapper.value.getBoundingClientRect();
+                    
+                    // 计算缩放中心
+                    const mouseX = e.clientX - rect.left;
+                    const mouseY = e.clientY - rect.top;
+                    
+                    // 计算原始位置
+                    const worldX = (mouseX - offsetX.value) / scale.value;
+                    const worldY = (mouseY - offsetY.value) / scale.value;
+                    
+                    // 应用缩放
+                    scale.value *= delta;
+                    scale.value = Math.max(0.1, Math.min(scale.value, 5)); // 限制缩放范围
+                    
+                    // 调整偏移量以保持缩放中心
+                    offsetX.value = mouseX - worldX * scale.value;
+                    offsetY.value = mouseY - worldY * scale.value;
+                    
+                    // 重绘
+                    redrawAllLayers();
+                    
+                    showTooltip(`缩放: ${Math.round(scale.value * 100)}%`);
+                }
+                
+                // 平移功能
+                function startPan(e) {
+                    if (e.button !== 1 && currentTool.value !== '选择') return; // 仅中键平移
+                    e.preventDefault();
+                    isPanning.value = true;
+                    panStartX.value = e.clientX - offsetX.value;
+                    panStartY.value = e.clientY - offsetY.value;
+                    canvasWrapper.value.style.cursor = 'grabbing';
+                }
+                
+                function handlePan(e) {
+                    if (!isPanning.value) return;
+                    e.preventDefault();
+                    offsetX.value = e.clientX - panStartX.value;
+                    offsetY.value = e.clientY - panStartY.value;
+                    
+                    // 重绘
+                    redrawAllLayers();
+                }
+                
+                function endPan() {
+                    isPanning.value = false;
+                    canvasWrapper.value.style.cursor = 'grab';
+                }
+                
+                // 触摸事件处理
+                function handleTouchStart(e) {
+                    e.preventDefault();
+                    
+                    if (e.touches.length === 1) {
+                        // 单点触摸 - 开始平移
+                        isPanning.value = true;
+                        panStartX.value = e.touches[0].clientX - offsetX.value;
+                        panStartY.value = e.touches[0].clientY - offsetY.value;
+                        
+                        // 如果是绘画工具，开始绘画
+                        if (!isPanning.value && currentTool.value !== '选择') {
+                            const touch = e.touches[0];
+                            const mouseEvent = new MouseEvent('mousedown', {
+                                clientX: touch.clientX,
+                                clientY: touch.clientY,
+                                target: drawingCanvas.value
+                            });
+                            startDrawing(mouseEvent);
+                        }
+                    } else if (e.touches.length === 2) {
+                        // 两点触摸 - 开始缩放
+                        isPanning.value = false;
+                        const dx = e.touches[0].clientX - e.touches[1].clientX;
+                        const dy = e.touches[0].clientY - e.touches[1].clientY;
+                        touchStartDistance.value = Math.sqrt(dx * dx + dy * dy);
+                        touchStartScale.value = scale.value;
+                        
+                        // 计算中点
+                        const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                        const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                        const rect = canvasWrapper.value.getBoundingClientRect();
+                        panStartX.value = midX - rect.left - offsetX.value;
+                        panStartY.value = midY - rect.top - offsetY.value;
+                    }
+                    
+                    // 保存触摸点
+                    touchPoints.value = Array.from(e.touches);
+                }
+                
+                function handleTouchMove(e) {
+                    e.preventDefault();
+                    
+                    if (e.touches.length === 1 && isPanning.value) {
+                        // 单点触摸 - 平移
+                        offsetX.value = e.touches[0].clientX - panStartX.value;
+                        offsetY.value = e.touches[0].clientY - panStartY.value;
+                        
+                        // 重绘
+                        redrawAllLayers();
+                    } else if (e.touches.length === 2) {
+                        // 两点触摸 - 缩放
+                        const dx = e.touches[0].clientX - e.touches[1].clientX;
+                        const dy = e.touches[0].clientY - e.touches[1].clientY;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        // 计算缩放比例
+                        const newScale = touchStartScale.value * (distance / touchStartDistance.value);
+                        scale.value = Math.max(0.1, Math.min(newScale, 5)); // 限制缩放范围
+                        
+                        // 计算中点
+                        const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                        const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                        
+                        // 调整偏移量
+                        const rect = canvasWrapper.value.getBoundingClientRect();
+                        const worldX = (midX - rect.left - offsetX.value) / touchStartScale.value;
+                        const worldY = (midY - rect.top - offsetY.value) / touchStartScale.value;
+                        
+                        offsetX.value = midX - rect.left - worldX * scale.value;
+                        offsetY.value = midY - rect.top - worldY * scale.value;
+                        
+                        // 重绘
+                        redrawAllLayers();
+                    }
+                    
+                    // 如果是绘画工具，继续绘画
+                    if (!isPanning.value && currentTool.value !== '选择' && isDrawing.value) {
+                        const touch = e.touches[0];
+                        const mouseEvent = new MouseEvent('mousemove', {
+                            clientX: touch.clientX,
+                            clientY: touch.clientY,
+                            target: drawingCanvas.value
+                        });
+                        draw(mouseEvent);
+                    }
+                    
+                    // 更新触摸点
+                    touchPoints.value = Array.from(e.touches);
+                }
+                
+                function handleTouchEnd(e) {
+                    e.preventDefault();
+                    
+                    if (e.touches.length === 0) {
+                        isPanning.value = false;
+                        
+                        // 停止绘画
+                        if (isDrawing.value) {
+                            stopDrawing();
+                        }
+                    } else if (e.touches.length === 1) {
+                        // 更新平移起点
+                        const touch = e.touches[0];
+                        panStartX.value = touch.clientX - offsetX.value;
+                        panStartY.value = touch.clientY - offsetY.value;
+                    }
+                    
+                    // 更新触摸点
+                    touchPoints.value = Array.from(e.touches);
+                }
+                
+                // 缩放控制
+                function zoomIn() {
+                    const rect = canvasWrapper.value.getBoundingClientRect();
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const worldX = (centerX - offsetX.value) / scale.value;
+                    const worldY = (centerY - offsetY.value) / scale.value;
+                    
+                    scale.value = Math.min(5, scale.value * 1.1);
+                    
+                    offsetX.value = centerX - worldX * scale.value;
+                    offsetY.value = centerY - worldY * scale.value;
+                    
+                    redrawAllLayers();
+                    showTooltip(`放大: ${Math.round(scale.value * 100)}%`);
+                }
+                
+                function zoomOut() {
+                    const rect = canvasWrapper.value.getBoundingClientRect();
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const worldX = (centerX - offsetX.value) / scale.value;
+                    const worldY = (centerY - offsetY.value) / scale.value;
+                    
+                    scale.value = Math.max(0.1, scale.value / 1.1);
+                    
+                    offsetX.value = centerX - worldX * scale.value;
+                    offsetY.value = centerY - worldY * scale.value;
+                    
+                    redrawAllLayers();
+                    showTooltip(`缩小: ${Math.round(scale.value * 100)}%`);
+                }
+                
+                function resetView() {
+                    scale.value = 1;
+                    centerView();
+                    redrawAllLayers();
+                    showTooltip('视图已重置');
+                }
+                
+                function toggleToolsPanel() {
+                    toolsPanelVisible.value = !toolsPanelVisible.value;
+                }
+                
+                function selectTool(tool) {
+                    currentTool.value = tool;
+                    showTooltip('已选择: ' + tool);
+                }
+                
+                function selectColor(color) {
+                    currentColor.value = color;
+                    showTooltip('颜色: ' + color);
+                }
+                
+                function setCanvasSize(width, height) {
+                    canvasWidth.value = width;
+                    canvasHeight.value = height;
+                    drawingCanvas.value.width = width;
+                    drawingCanvas.value.height = height;
+                    previewCanvas.value.width = width;
+                    previewCanvas.value.height = height;
+                    
+                    // 更新每个图层的画布尺寸
+                    layers.value.forEach(layer => {
+                        if (layer.canvas) {
+                            const tempCtx = layer.ctx;
+                            
+                            // 创建新尺寸的canvas
+                            const newCanvas = document.createElement('canvas');
+                            newCanvas.width = width;
+                            newCanvas.height = height;
+                            const newCtx = newCanvas.getContext('2d');
+                            
+                            // 绘制原有内容到新canvas
+                            newCtx.drawImage(layer.canvas, 0, 0);
+                            
+                            // 更新图层引用
+                            layer.canvas = newCanvas;
+                            layer.ctx = newCtx;
+                        }
+                    });
+                    
+                    redrawAllLayers();
+                    centerView();
+                    showTooltip(`画布尺寸: ${width}×${height}`);
+                    setTimeout(saveState, 100);
+                }
+                
+                function addNewLayer() {
+                    const newLayer = {
+                        name: `图层 ${layers.value.length + 1}`,
+                        visible: true,
+                        opacity: 100,
+                        objects: [],
+                        canvas: document.createElement('canvas'),
+                        ctx: null
+                    };
+                    
+                    newLayer.canvas.width = canvasWidth.value;
+                    newLayer.canvas.height = canvasHeight.value;
+                    newLayer.ctx = newLayer.canvas.getContext('2d');
+                    newLayer.ctx.fillStyle = 'rgba(0,0,0,0)';
+                    newLayer.ctx.fillRect(0, 0, newLayer.canvas.width, newLayer.canvas.height);
+                    
+                    layers.value.push(newLayer);
+                    currentLayerIndex.value = layers.value.length - 1;
+                    showTooltip('添加新图层');
+                }
+                
+                function removeLayer(index) {
+                    if (layers.value.length <= 1) {
+                        showTooltip('至少保留一个图层');
+                        return;
+                    }
+                    layers.value.splice(index, 1);
+                    if (currentLayerIndex.value >= layers.value.length) {
+                        currentLayerIndex.value = layers.value.length - 1;
+                    }
+                    redrawAllLayers();
+                    showTooltip('图层已删除');
+                }
+                
+                function updateLayerOpacity() {
+                    currentLayer.value.opacity = layerOpacity.value;
+                    redrawAllLayers();
+                }
+                
+                function startDrawing(e) {
+                    if (isPanning.value) return;
+                    
+                    const coords = getCanvasCoordinates(e);
+                    const x = coords.x;
+                    const y = coords.y;
+                    
+                    if (currentTool.value === '选择') {
+                        selection.active = true;
+                        selection.x = x;
+                        selection.y = y;
+                        selection.width = 0;
+                        selection.height = 0;
+                        return;
+                    }
+                    
+                    if (['直线', '圆形', '矩形'].includes(currentTool.value)) {
+                        drawingCtx.value.save();
+                    }
+                    
+                    isDrawing.value = true;
+                    startX.value = x;
+                    startY.value = y;
+                    lastX.value = x;
+                    lastY.value = y;
+                    shapePoints.value = [{x, y}];
+                    
+                    if (['直线', '圆形', '矩形'].includes(currentTool.value)) {
+                        isDrawingShape.value = true;
+                        clearPreview();
+                    }
+                }
+                
+                function draw(e) {
+                    if (isPanning.value || !isDrawing.value) return;
+                    
+                    const coords = getCanvasCoordinates(e);
+                    const x = coords.x;
+                    const y = coords.y;
+                    
+                    if (selection.active) {
+                        selection.width = Math.abs(x - selection.x);
+                        selection.height = Math.abs(y - selection.y);
+                        if (x < selection.x) {
+                            selection.x = x;
+                        }
+                        if (y < selection.y) {
+                            selection.y = y;
+                        }
+                        return;
+                    }
+                    
+                    const ctx = currentLayer.value.ctx;
+                    ctx.lineWidth = brushSize.value;
+                    ctx.globalAlpha = opacity.value / 100;
+                    
+                    if (['铅笔', '画笔', '橡皮'].includes(currentTool.value)) {
+                        ctx.beginPath();
+                        ctx.moveTo(lastX.value, lastY.value);
+                        
+                        if (currentTool.value === '橡皮') {
+                            ctx.strokeStyle = '#ffffff';
+                            ctx.lineTo(x, y);
+                        } 
+                        else if (currentTool.value === '铅笔') {
+                            ctx.strokeStyle = currentColor.value;
+                            ctx.lineTo(x, y);
+                        } 
+                        else {
+                            ctx.strokeStyle = currentColor.value;
+                            ctx.lineTo(x, y);
+                        }
+                        
+                        ctx.stroke();
+                        
+                        lastX.value = x;
+                        lastY.value = y;
+                        shapePoints.value.push({x, y});
+                        
+                        // 重绘所有图层
+                        redrawAllLayers();
+                    }
+                    else if (isDrawingShape.value) {
+                        clearPreview();
+                        previewCtx.value.lineWidth = brushSize.value;
+                        previewCtx.value.strokeStyle = currentColor.value;
+                        previewCtx.value.globalAlpha = opacity.value / 100;
+                        
+                        switch(currentTool.value) {
+                            case '直线': drawLine(startX.value, startY.value, x, y); break;
+                            case '圆形': drawCircle(startX.value, startY.value, x, y); break;
+                            case '矩形': drawRectangle(startX.value, startY.value, x, y); break;
+                        }
+                    }
+                }
+                
+                function drawLine(startX, startY, endX, endY) {
+                    previewCtx.value.beginPath();
+                    previewCtx.value.moveTo(startX, startY);
+                    previewCtx.value.lineTo(endX, endY);
+                    previewCtx.value.stroke();
+                }
+                
+                function drawCircle(centerX, centerY, pointX, pointY) {
+                    const radius = Math.sqrt(Math.pow(pointX - centerX, 2) + Math.pow(pointY - centerY, 2));
+                    previewCtx.value.beginPath();
+                    previewCtx.value.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+                    previewCtx.value.stroke();
+                }
+                
+                function drawRectangle(startX, startY, endX, endY) {
+                    const width = endX - startX;
+                    const height = endY - startY;
+                    previewCtx.value.beginPath();
+                    previewCtx.value.rect(startX, startY, width, height);
+                    previewCtx.value.stroke();
+                }
+                
+                function clearPreview() {
+                    previewCtx.value.clearRect(0, 0, previewCanvas.value.width, previewCanvas.value.height);
+                }
+                
+                function stopDrawing(e) {
+                    if (isPanning.value) return;
+                    
+                    if (e) {
+                        const coords = getCanvasCoordinates(e);
+                        const x = coords.x;
+                        const y = coords.y;
+                        
+                        if (selection.active) {
+                            selection.active = false;
+                            if (selection.width > 5 && selection.height > 5) {
+                                activeSelection.value = {
+                                    x: selection.x,
+                                    y: selection.y,
+                                    width: selection.width,
+                                    height: selection.height
+                                };
+                                showTooltip('已选择区域: ' + 
+                                    Math.round(selection.width) + '×' + 
+                                    Math.round(selection.height) + 'px');
+                            }
+                            return;
+                        }
+                    }
+                    
+                    if (!isDrawing.value) return;
+                    isDrawing.value = false;
+                    
+                    if (currentTool.value === '填充' && e) {
+                        const coords = getCanvasCoordinates(e);
+                        floodFill(coords.x, coords.y, currentColor.value);
+                    }
+                    else if (isDrawingShape.value && e) {
+                        clearPreview();
+                        const ctx = currentLayer.value.ctx;
+                        ctx.lineWidth = brushSize.value;
+                        ctx.strokeStyle = currentColor.value;
+                        ctx.globalAlpha = opacity.value / 100;
+                        
+                        const coords = getCanvasCoordinates(e);
+                        const x = coords.x;
+                        const y = coords.y;
+                        
+                        switch(currentTool.value) {
+                            case '直线': 
+                                drawLineOnCanvas(startX.value, startY.value, x, y);
+                                break;
+                            case '圆形': 
+                                drawCircleOnCanvas(startX.value, startY.value, x, y);
+                                break;
+                            case '矩形': 
+                                drawRectangleOnCanvas(startX.value, startY.value, x, y);
+                                break;
+                        }
+                        
+                        redrawAllLayers();
+                        isDrawingShape.value = false;
+                    }
+                    
+                    saveState();
+                }
+                
+                // 洪水填充算法
+                function floodFill(startX, startY, fillColor) {
+                    const ctx = currentLayer.value.ctx;
+                    const imageData = ctx.getImageData(0, 0, canvasWidth.value, canvasHeight.value);
+                    const data = imageData.data;
+                    const width = canvasWidth.value;
+                    const height = canvasHeight.value;
+                    
+                    const startPos = (Math.floor(startY) * width + Math.floor(startX)) * 4;
+                    const targetR = data[startPos];
+                    const targetG = data[startPos + 1];
+                    const targetB = data[startPos + 2];
+                    const targetA = data[startPos + 3];
+                    
+                    const fillR = parseInt(fillColor.substring(1, 3), 16);
+                    const fillG = parseInt(fillColor.substring(3, 5), 16);
+                    const fillB = parseInt(fillColor.substring(5, 7), 16);
+                    if (targetR === fillR && targetG === fillG && targetB === fillB) return;
+                    
+                    const tolerance = 5;
+                    const stack = [[Math.floor(startX), Math.floor(startY)]];
+                    const visited = new Set();
+                    
+                    while (stack.length > 0) {
+                        const [x, y] = stack.pop();
+                        const key = `${x},${y}`;
+                        if (visited.has(key)) continue;
+                        visited.add(key);
+                        const pos = (y * width + x) * 4;
+                        
+                        if (x < 0 || y < 0 || x >= width || y >= height) continue;
+                        
+                        const r = data[pos];
+                        const g = data[pos + 1];
+                        const b = data[pos + 2];
+                        const a = data[pos + 3];
+                        
+                        const diffR = Math.abs(r - targetR);
+                        const diffG = Math.abs(g - targetG);
+                        const diffB = Math.abs(b - targetB);
+                        const diffA = Math.abs(a - targetA);
+                        
+                        if (diffR <= tolerance && diffG <= tolerance && diffB <= tolerance && diffA <= tolerance) {
+                            data[pos] = fillR;
+                            data[pos + 1] = fillG;
+                            data[pos + 2] = fillB;
+                            data[pos + 3] = 255;
+                            
+                            stack.push([x + 1, y]);
+                            stack.push([x - 1, y]);
+                            stack.push([x, y + 1]);
+                            stack.push([x, y - 1]);
+                        }
+                    }
+                    
+                    ctx.putImageData(imageData, 0, 0);
+                    redrawAllLayers();
+                }
+                
+                function drawLineOnCanvas(startX, startY, endX, endY) {
+                    const ctx = currentLayer.value.ctx;
+                    ctx.beginPath();
+                    ctx.moveTo(startX, startY);
+                    ctx.lineTo(endX, endY);
+                    ctx.stroke();
+                    
+                    currentLayer.value.objects.push({
+                        type: 'line',
+                        points: [{x: startX, y: startY}, {x: endX, y: endY}],
+                        color: currentColor.value,
+                        size: brushSize.value
+                    });
+                }
+                
+                function drawCircleOnCanvas(centerX, centerY, pointX, pointY) {
+                    const ctx = currentLayer.value.ctx;
+                    const radius = Math.sqrt(Math.pow(pointX - centerX, 2) + Math.pow(pointY - centerY, 2));
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+                    ctx.stroke();
+                    
+                    currentLayer.value.objects.push({
+                        type: 'circle',
+                        center: {x: centerX, y: centerY},
+                        radius: radius,
+                        color: currentColor.value,
+                        size: brushSize.value
+                    });
+                }
+                
+                function drawRectangleOnCanvas(startX, startY, endX, endY) {
+                    const ctx = currentLayer.value.ctx;
+                    const width = endX - startX;
+                    const height = endY - startY;
+                    ctx.beginPath();
+                    ctx.rect(startX, startY, width, height);
+                    ctx.stroke();
+                    
+                    currentLayer.value.objects.push({
+                        type: 'rect',
+                        x: startX,
+                        y: startY,
+                        width: width,
+                        height: height,
+                        color: currentColor.value,
+                        size: brushSize.value
+                    });
+                }
+                
+                function moveSelection(dx, dy) {
+                    if (!activeSelection.value) return;
+                    activeSelection.value.x += dx;
+                    activeSelection.value.y += dy;
+                    clearPreview();
+                    previewCtx.value.strokeStyle = '#2196F3';
+                    previewCtx.value.strokeRect(
+                        activeSelection.value.x, 
+                        activeSelection.value.y,
+                        activeSelection.value.width,
+                        activeSelection.value.height
+                    );
+                    showTooltip(`已移动选择区域 ${dx}px,${dy}px`);
+                }
+                
+                function deleteSelection() {
+                    if (!activeSelection.value) return;
+                    const ctx = currentLayer.value.ctx;
+                    ctx.clearRect(
+                        activeSelection.value.x,
+                        activeSelection.value.y,
+                        activeSelection.value.width,
+                        activeSelection.value.height
+                    );
+                    activeSelection.value = null;
+                    redrawAllLayers();
+                    saveState();
+                    showTooltip('已删除选择区域');
+                }
+                
+                function saveState() {
+                    if (historyIndex.value < history.value.length - 1) {
+                        history.value = history.value.slice(0, historyIndex.value + 1);
+                    }
+                    history.value.push(drawingCanvas.value.toDataURL());
+                    historyIndex.value = history.value.length - 1;
+                }
+                
+                function restoreState() {
+                    const img = new Image();
+                    img.onload = () => {
+                        drawingCtx.value.clearRect(0, 0, drawingCanvas.value.width, drawingCanvas.value.height);
+                        drawingCtx.value.drawImage(img, 0, 0);
+                    };
+                    img.src = history.value[historyIndex.value];
+                }
+                
+                function undo() {
+                    if (historyIndex.value > 0) {
+                        historyIndex.value--;
+                        restoreState();
+                        showTooltip('撤销操作');
+                    }
+                }
+                
+                function redo() {
+                    if (historyIndex.value < history.value.length - 1) {
+                        historyIndex.value++;
+                        restoreState();
+                        showTooltip('重做操作');
+                    }
+                }
+                
+                function clearCanvas() {
+                    const ctx = currentLayer.value.ctx;
+                    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                    clearPreview();
+                    redrawAllLayers();
+                    saveState();
+                    activeSelection.value = null;
+                    showTooltip('当前图层已清空');
+                }
+                
+                function applyAI(action) {
+                    if (action === 'colorize') {
+                        showTooltip('应用AI上色效果...');
+                        setTimeout(() => {
+                            const ctx = currentLayer.value.ctx;
+                            const gradient = ctx.createLinearGradient(0, 0, canvasWidth.value, 0);
+                            gradient.addColorStop(0, 'rgba(255,0,0,0.2)');
+                            gradient.addColorStop(0.5, 'rgba(0,255,0,0.2)');
+                            gradient.addColorStop(1, 'rgba(0,0,255,0.2)');
+                            ctx.fillStyle = gradient;
+                            ctx.globalCompositeOperation = 'multiply';
+                            ctx.fillRect(0, 0, canvasWidth.value, canvasHeight.value);
+                            ctx.globalCompositeOperation = 'source-over';
+                            
+                            redrawAllLayers();
+                            saveState();
+                            showTooltip('AI上色完成');
+                        }, 1000);
+                    }
+                }
+                
+                function showTooltip(text) {
+                    tooltip.text = text;
+                    tooltip.show = true;
+                    tooltip.x = canvasWidth.value - 200;
+                    tooltip.y = 50;
+                    setTimeout(() => {
+                        tooltip.show = false;
+                    }, 2000);
+                }
+                
+                return {
+                    tools,
+                    currentTool,
+                    brushSize,
+                    opacity,
+                    layerOpacity,
+                    colorPalette,
+                    currentColor,
+                    customColor,
+                    canvasWidth,
+                    canvasHeight,
+                    tooltip,
+                    layers,
+                    currentLayerIndex,
+                    currentLayer,
+                    selection,
+                    activeSelection,
+                    canvasWrapper,
+                    scale,
+                    offsetX,
+                    offsetY,
+                    toolsPanelVisible,
+                    showDebugInfo,
+                    selectTool,
+                    selectColor,
+                    setCanvasSize,
+                    addNewLayer,
+                    removeLayer,
+                    updateLayerOpacity,
+                    moveSelection,
+                    deleteSelection,
+                    undo,
+                    redo,
+                    clearCanvas,
+                    applyAI,
+                    handleWheel,
+                    startPan,
+                    handlePan,
+                    endPan,
+                    handleTouchStart,
+                    handleTouchMove,
+                    handleTouchEnd,
+                    zoomIn,
+                    zoomOut,
+                    resetView,
+                    toggleToolsPanel
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

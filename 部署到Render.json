@@ -1,0 +1,16 @@
+{
+  "name": "emotion-canvas",
+  "type": "static_site",
+  "buildCommand": "npm run build",
+  "publishDirectory": "dist",
+  "environment": {
+    "NODE_VERSION": "18"
+  },
+  "routes": [
+    {
+      "type": "rewrite",
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

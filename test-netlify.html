@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netlify部署测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; text-align: center; }
+        .success { color: green; font-size: 24px; }
+        .error { color: red; font-size: 18px; }
+        button { padding: 15px 30px; font-size: 16px; margin: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Netlify部署测试</h1>
+    
+    <div id="status">
+        <h2 class="success">✅ 项目已重新构建完成</h2>
+        <p>请使用新的压缩包： <strong>netlify-working.zip</strong></p>
+    </div>
+    
+    <button onclick="window.open('https://app.netlify.com/drop', '_blank')">
+        🚀 打开Netlify拖拽页面
+    </button>
+    
+    <button onclick="window.open('file:///' + window.location.pathname.replace('test-netlify.html', 'netlify-working.zip'), '_blank')">
+        📁 打开新的压缩包
+    </button>
+    
+    <h3>🎯 操作步骤：</h3>
+    <ol style="text-align: left; max-width: 500px; margin: 0 auto;">
+        <li>点击上方按钮打开Netlify拖拽页面</li>
+        <li>拖拽 <strong>netlify-working.zip</strong> 到页面</li>
+        <li>等待30秒完成部署</li>
+        <li>获得中国可访问的网址</li>
+    </ol>
+    
+    <p><strong>注意：</strong>这次使用全新的压缩包，文件名是 <code>netlify-working.zip</code></p>
+</body>
+</html>

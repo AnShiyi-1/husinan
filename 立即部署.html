@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>一键部署情绪画布到网站</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .deploy-btn {
+            background: #00d4aa;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .deploy-btn:hover {
+            background: #00b894;
+        }
+        .platform {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 情绪画布 - 一键部署到网站</h1>
+    
+    <div class="platform">
+        <h3>方案1: Netlify (推荐)</h3>
+        <p>免费国际平台，无需注册，一键部署</p>
+        <button class="deploy-btn" onclick="deployNetlify()">立即部署到Netlify</button>
+    </div>
+    
+    <div class="platform">
+        <h3>方案2: Vercel</h3>
+        <p>免费国际平台，全球CDN加速</p>
+        <button class="deploy-btn" onclick="deployVercel()">立即部署到Vercel</button>
+    </div>
+    
+    <div class="platform">
+        <h3>方案3: GitHub Pages</h3>
+        <p>完全免费，永久托管</p>
+        <button class="deploy-btn" onclick="deployGitHub()">立即部署到GitHub Pages</button>
+    </div>
+
+    <script>
+        function deployNetlify() {
+            window.open('https://app.netlify.com/drop', '_blank');
+            alert('1. 拖拽 dist 文件夹到页面\n2. 等待部署完成\n3. 获得网站地址');
+        }
+        
+        function deployVercel() {
+            window.open('https://vercel.com/new', '_blank');
+            alert('1. 导入项目\n2. 选择 dist 文件夹\n3. 一键部署');
+        }
+        
+        function deployGitHub() {
+            window.open('https://github.com/new', '_blank');
+            alert('1. 创建新仓库\n2. 上传 dist 文件夹内容\n3. 启用 GitHub Pages');
+        }
+    </script>
+</body>
+</html>

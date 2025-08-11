@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>修复白屏问题 - 一键诊断工具</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+        .diagnosis-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #007bff;
+        }
+        .fix-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: transform 0.3s;
+        }
+        .fix-button:hover {
+            transform: translateY(-2px);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .error-item {
+            background: #ffeef0;
+            border: 1px solid #d73a49;
+            border-radius: 6px;
+            padding: 10px;
+            margin: 5px 0;
+            color: #d73a49;
+        }
+        .success-item {
+            background: #f0fff4;
+            border: 1px solid #28a745;
+            border-radius: 6px;
+            padding: 10px;
+            margin: 5px 0;
+            color: #28a745;
+        }
+        .code-block {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛠️ 白屏问题修复工具</h1>
+        
+        <div class="diagnosis-section">
+            <h3>🔍 快速诊断</h3>
+            <p><strong>你的网站:</strong> <a href="https://anshiyi-1.github.io/qxhb/" target="_blank">https://anshiyi-1.github.io/qxhb/</a></p>
+            <button class="test-button" onclick="testSite()">立即测试</button>
+            <button class="test-button" onclick="openDevTools()">打开开发者工具</button>
+        </div>
+
+        <div class="diagnosis-section">
+            <h3>🚨 常见白屏原因</h3>
+            <div id="causes">
+                <div class="error-item">1. JS文件加载失败 (404错误)</div>
+                <div class="error-item">2. CSS文件路径错误</div>
+                <div class="error-item">3. 资源文件路径错误</div>
+                <div class="error-item">4. 路由配置问题</div>
+                <div class="error-item">5. 构建配置问题</div>
+            </div>
+        </div>
+
+        <div class="diagnosis-section">
+            <h3>⚡ 一键修复方案</h3>
+            <button class="fix-button" onclick="fixPathIssue()">修复路径问题</button>
+            <button class="fix-button" onclick="rebuildAndUpload()">重新构建上传</button>
+            <button class="fix-button" onclick="createIndexRedirect()">创建重定向</button>
+        </div>
+
+        <div class="diagnosis-section">
+            <h3>📋 手动检查清单</h3>
+            <div id="manual-check">
+                <label><input type="checkbox" id="check1"> index.html存在</label><br>
+                <label><input type="checkbox" id="check2"> assets文件夹存在</label><br>
+                <label><input type="checkbox" id="check3"> JS文件可访问</label><br>
+                <label><input type="checkbox" id="check4"> CSS文件可访问</label><br>
+                <label><input type="checkbox" id="check5"> 图片资源可访问</label>
+            </div>
+            <button class="test-button" onclick="runManualCheck()">运行检查</button>
+        </div>
+
+        <div id="result"></div>
+
+        <script>
+            function testSite() {
+                window.open('https://anshiyi-1.github.io/qxhb/', '_blank');
+            }
+
+            function openDevTools() {
+                alert('在网站页面按F12打开开发者工具，查看Console和Network标签页');
+            }
+
+            function fixPathIssue() {
+                // 创建修复后的index.html
+                const fixedIndex = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>情绪画布 - 绘画创作平台</title>
+    <link rel="icon" type="image/svg+xml" href="./hb.svg">
+    <script type="module" crossorigin src="./assets/index.js"></script>
+    <link rel="stylesheet" href="./assets/index.css">
+</head>
+<body>
+    <div id="app"></div>
+    <script>
+        // 修复路径的备用方案
+        window.addEventListener('error', function(e) {
+            console.log('资源加载错误:', e.filename);
+        });
+    </script>
+</body>
+</html>`;
+                
+                const blob = new Blob([fixedIndex], {type: 'text/html'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'index-fixed.html';
+                a.click();
+                
+                document.getElementById('result').innerHTML = 
+                    '<div class="success-item">✅ 已生成修复版index.html，请下载后上传到GitHub</div>';
+            }
+
+            function rebuildAndUpload() {
+                document.getElementById('result').innerHTML = 
+                    '<div class="success-item">🔄 准备重新构建项目...</div>';
+                
+                // 打开构建工具
+                setTimeout(() => {
+                    window.open('https://github.com/AnShiyi-1/qxhb', '_blank');
+                }, 1000);
+            }
+
+            function createIndexRedirect() {
+                const redirectPage = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>重定向中...</title>
+    <script>
+        // 检测资源是否可用
+        fetch('./assets/index.js')
+            .then(() => {
+                window.location.href = './index.html';
+            })
+            .catch(() => {
+                document.body.innerHTML = '<h1>资源加载失败，请检查文件是否完整上传</h1>';
+            });
+    </script>
+</head>
+<body>
+    <h1>正在加载情绪画布...</h1>
+    <p>如果长时间停留在此页面，请检查文件是否完整上传</p>
+</body>
+</html>`;
+                
+                const blob = new Blob([redirectPage], {type: 'text/html'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'redirect.html';
+                a.click();
+            }
+
+            async function runManualCheck() {
+                const baseUrl = 'https://anshiyi-1.github.io/qxhb/';
+                const checks = [
+                    {id: 'check1', url: baseUrl + 'index.html', name: 'index.html'},
+                    {id: 'check2', url: baseUrl + 'assets/', name: 'assets文件夹'},
+                    {id: 'check3', url: baseUrl + 'assets/index.js', name: 'JS文件'},
+                    {id: 'check4', url: baseUrl + 'assets/index.css', name: 'CSS文件'},
+                    {id: 'check5', url: baseUrl + 'hb.svg', name: 'SVG图标'}
+                ];
+
+                for (const check of checks) {
+                    try {
+                        const response = await fetch(check.url);
+                        const checkbox = document.getElementById(check.id);
+                        checkbox.checked = response.ok;
+                        if (!response.ok) {
+                            console.log(`${check.name} 加载失败: ${response.status}`);
+                        }
+                    } catch (error) {
+                        console.log(`${check.name} 加载错误: ${error}`);
+                    }
+                }
+            }
+
+            // 自动运行检查
+            setTimeout(runManualCheck, 2000);
+        </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📁 详细上传指南 - 找不到按钮的解决方案</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f6f8fa;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .content {
+            padding: 30px;
+        }
+        .step {
+            background: #f8f9fa;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .step h3 {
+            color: #28a745;
+            margin-top: 0;
+        }
+        .screenshot-placeholder {
+            background: #e9ecef;
+            border: 2px dashed #adb5bd;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            color: #6c757d;
+            margin: 15px 0;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .button {
+            background: #28a745;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .button:hover {
+            background: #218838;
+        }
+        .file-list {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📁 找不到上传按钮？详细解决方案</h1>
+            <p>一步一步教你找到GitHub的上传功能</p>
+        </div>
+        
+        <div class="content">
+            <div class="warning">
+                <strong>🔍 常见问题：</strong>找不到"Add file"按钮通常是因为：<br>
+                1. 您没有登录GitHub<br>
+                2. 您不是仓库的所有者<br>
+                3. 仓库是私有的<br>
+                4. 页面显示的是别人的仓库
+            </div>
+
+            <div class="step">
+                <h3>步骤1：确认您已登录正确的GitHub账号</h3>
+                <p>1. 打开：<a href="https://github.com/login" target="_blank" class="button">GitHub登录页面</a></p>
+                <p>2. 确保登录的是账号：<strong>AnShiyi-1</strong></p>
+                <p>3. 登录后访问您的仓库：<a href="https://github.com/AnShiyi-1/qxhb" target="_blank" class="button">您的情绪画布仓库</a></p>
+            </div>
+
+            <div class="step">
+                <h3>步骤2：找到正确的上传位置</h3>
+                <p>在您的仓库页面，寻找以下位置：</p>
+                
+                <div style="background: white; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin: 15px 0;">
+                    <strong>📍 位置1：仓库主页右上角</strong><br>
+                    <div class="screenshot-placeholder">
+                        [Add file 按钮位置示意图]<br>
+                        在 "Code" 按钮旁边，绿色按钮
+                    </div>
+                    按钮文字：<strong>"Add file"</strong> → <strong>"Upload files"</strong>
+                </div>
+
+                <div style="background: white; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin: 15px 0;">
+                    <strong>📍 位置2：直接拖拽上传</strong><br>
+                    在任何仓库页面，可以直接拖拽文件到浏览器窗口上传
+                </div>
+            </div>
+
+            <div class="step">
+                <h3>步骤3：如果还是找不到，使用备用方法</h3>
+                <p><strong>方法A：直接创建文件</strong></p>
+                <ol>
+                    <li>点击 "Create new file"</li>
+                    <li>文件名输入：<code>index.html</code></li>
+                    <li>复制粘贴dist/index.html的内容</li>
+                </ol>
+                
+                <p><strong>方法B：使用GitHub CLI</strong></p>
+                <ol>
+                    <li>我已为您准备了完整的文件包</li>
+                    <li>下载：<code>github-upload-ready.zip</code></li>
+                    <li>解压后上传到仓库根目录</li>
+                </ol>
+            </div>
+
+            <div class="step">
+                <h3>步骤4：需要上传的具体文件</h3>
+                <div class="file-list">
+📁 需要上传的文件列表：<br>
+├── 📄 index.html (主页面)<br>
+├── 📁 assets/ (静态资源文件夹)<br>
+│   ├── 📁 css/ (样式文件)<br>
+│   ├── 📁 js/ (JavaScript文件)<br>
+│   └── 📁 images/ (图片资源)<br>
+├── 🎨 hb.svg (图标)<br>
+├── 🎨 qb.svg (图标)<br>
+├── 🎨 tc.svg (图标)<br>
+└── 🎨 xpc.svg (图标)
+                </div>
+            </div>
+
+            <div class="step">
+                <h3>步骤5：一键解决方案</h3>
+                <p>如果您觉得手动操作复杂，我已为您准备了：</p>
+                
+                <a href="file:///C:/Users/Firday1/Desktop/绘画软件/github-upload-ready.zip" class="button" download>
+                    📦 下载完整部署包
+                </a>
+                
+                <a href="file:///C:/Users/Firday1/Desktop/绘画软件/dist" class="button">
+                    📁 打开本地文件
+                </a>
+                
+                <p><strong>使用方法：</strong></p>
+                <ol>
+                    <li>下载上面的zip文件</li>
+                    <li>在GitHub仓库页面点击"Add file" → "Upload files"</li>
+                    <li>拖拽zip中的所有文件到上传区域</li>
+                    <li>提交更改</li>
+                </ol>
+            </div>
+
+            <div class="warning">
+                <strong>💡 重要提醒：</strong><br>
+                • 确保您登录的是AnShiyi-1账号<br>
+                • 确保仓库qxhb是您的<br>
+                • 上传后等待5-10分钟让GitHub Pages生效<br>
+                • 完成后访问：https://anshiyi-1.github.io/qxhb
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="https://github.com/AnShiyi-1/qxhb" target="_blank" class="button" style="font-size: 18px;">
+                    🚀 立即开始上传
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

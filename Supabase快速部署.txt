@@ -1,0 +1,110 @@
+🎯 Supabase快速部署指南
+
+## 📋 3步完成部署
+
+### 第1步：注册账号
+1. 打开浏览器访问：https://supabase.com
+2. 点击右上角"Sign In"
+3. 使用GitHub账号登录
+
+### 第2步：创建项目
+1. 登录后点击"New Project"
+2. 填写信息：
+   - 项目名称：emotion-canvas
+   - 地区：Singapore (东南亚)
+   - 密码：设置你的数据库密码
+3. 等待创建完成（约2分钟）
+
+### 第3步：获取配置信息
+创建完成后，在Project Settings中找到：
+- Project URL: https://xxx.supabase.co
+- Anon Key: xxxxxx
+
+## 🔧 配置项目
+
+### 1. 创建.env文件
+在项目根目录创建 `.env` 文件，填入：
+```
+VITE_SUPABASE_URL=你的Project URL
+VITE_SUPABASE_ANON_KEY=你的Anon Key
+```
+
+### 2. 初始化数据库
+在Supabase Dashboard的SQL Editor中运行：
+
+```sql
+-- 用户表
+CREATE TABLE users (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  username VARCHAR(50) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  avatar_url TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 情绪记录表
+CREATE TABLE emotions (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id uuid REFERENCES users(id) ON DELETE CASCADE,
+  emotion_type VARCHAR(20) NOT NULL,
+  intensity INTEGER CHECK (intensity >= 1 AND intensity <= 10),
+  description TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 画布记录表
+CREATE TABLE artworks (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id uuid REFERENCES users(id) ON DELETE CASCADE,
+  title VARCHAR(255),
+  canvas_data JSONB,
+  image_url TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+```
+
+## 🚀 部署到Vercel
+
+### 一键部署
+1. 访问：https://vercel.com
+2. 导入GitHub项目
+3. 在环境变量中添加：
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+4. 点击Deploy
+
+### 本地测试
+```bash
+# 安装依赖
+npm install
+
+# 启动开发服务器
+npm run dev
+
+# 构建生产版本
+npm run build
+```
+
+## 📱 最终访问地址
+- **前端**：https://your-project.vercel.app
+- **后端API**：https://xxx.supabase.co
+- **数据库**：PostgreSQL + 实时功能
+
+## 💡 免费额度
+- 数据库：500MB
+- API请求：每日200MB
+- 文件存储：1GB
+- 实时连接：200个并发
+- 认证用户：无限
+
+## 🎯 现在就开始
+1. 立即访问：https://supabase.com
+2. 注册账号
+3. 创建emotion-canvas项目
+4. 复制配置信息到.env文件
+5. 一键部署到Vercel
+
+整个过程只需5分钟！
